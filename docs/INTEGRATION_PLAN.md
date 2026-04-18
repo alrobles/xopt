@@ -1,4 +1,4 @@
-# roptim — State-of-the-Art Optimization R Package
+# xopt — State-of-the-Art Optimization R Package
 
 ## Integration Plan: xad-r + ucminfcpp + xtensor-r
 
@@ -25,7 +25,7 @@ This document describes the concrete plan to build a new R optimization package 
 ```
 ┌─────────────────────────────────────────────────────┐
 │                   R User API                        │
-│  roptim::minimize(par, fn, method="ucminf",         │
+│  xopt::minimize(par, fn, method="ucminf",         │
 │                   gradient="auto", ...)              │
 └──────────────────────┬──────────────────────────────┘
                        │ Rcpp
@@ -66,7 +66,7 @@ XAD's adjoint mode can compute the full gradient in a single backward sweep. The
 ## 4. Concrete C++ Prototype — Rcpp Interface
 
 ```cpp
-// src/roptim_autodiff.cpp
+// src/xopt_autodiff.cpp
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
 
@@ -134,7 +134,7 @@ Rcpp::List minimize_autodiff_cpp(
 The true state-of-the-art path is when the objective is defined **in C++**, so XAD can differentiate it exactly via tape:
 
 ```cpp
-// src/roptim_xad_native.hpp
+// src/xopt_xad_native.hpp
 #pragma once
 #include "XAD/XAD.hpp"
 #include "ucminf_core.hpp"
@@ -192,9 +192,9 @@ ucminf::Result minimize_with_autodiff(
 ## 6. R-Level API — Rosenbrock Example
 
 ```cpp
-// src/roptim_rosenbrock_example.cpp
+// src/xopt_rosenbrock_example.cpp
 #include <Rcpp.h>
-#include "roptim_xad_native.hpp"
+#include "xopt_xad_native.hpp"
 
 // Compiled C++ + autodiff + optimizer — zero R overhead
 // [[Rcpp::export]]
@@ -223,7 +223,7 @@ Rcpp::List minimize_rosenbrock(Rcpp::NumericVector par) {
 ## 7. Package Structure
 
 ```
-roptim/
+xopt/
 ├── DESCRIPTION
 ├── NAMESPACE
 ├── R/
@@ -235,11 +235,11 @@ roptim/
 │   ├── include/
 │   │   ├── ucminf_core.hpp     # vendored from ucminfcpp
 │   │   ├── ucminf_core_impl.hpp
-│   │   └── roptim_xad_native.hpp
+│   │   └── xopt_xad_native.hpp
 │   ├── xad/                    # git submodule → auto-differentiation/xad
 │   ├── xtensor/                # vendored headers (or via inst/include)
 │   ├── xtensor-r/              # vendored headers
-│   ├── roptim_minimize.cpp     # Rcpp exports
+│   ├── xopt_minimize.cpp     # Rcpp exports
 │   └── RcppExports.cpp
 ├── inst/
 │   └── include/                # Public headers for LinkingTo users
@@ -266,7 +266,7 @@ PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 ### DESCRIPTION
 
 ```
-Package: roptim
+Package: xopt
 Title: High-Performance Optimization with Automatic Differentiation for R
 Version: 0.1.0
 Depends: R (>= 3.5.0)
@@ -330,7 +330,7 @@ minimize <- function(par, fn, gr = NULL, ...,
 ## 11. Development Roadmap
 
 ### Phase 1 — Package Skeleton
-- [ ] Create new `roptim` repository
+- [ ] Create new `xopt` repository
 - [ ] Vendor ucminfcpp headers (`ucminf_core.hpp`, `ucminf_core_impl.hpp`)
 - [ ] Vendor xtensor-r headers
 - [ ] Basic R pass-through to `minimize_direct`
