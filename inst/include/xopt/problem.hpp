@@ -12,6 +12,7 @@
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include <cmath>
 
 namespace xopt {
 
