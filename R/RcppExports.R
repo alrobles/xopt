@@ -8,3 +8,27 @@ probe_xad_xtensor <- function() {
 probe_sdm <- function() {
     .Call('_xopt_probe_sdm', PACKAGE = 'xopt')
 }
+
+test_logistic_sdm_gradient <- function() {
+    .Call('_xopt_test_logistic_sdm_gradient', PACKAGE = 'xopt')
+}
+
+test_logistic_sdm_endtoend <- function() {
+    .Call('_xopt_test_logistic_sdm_endtoend', PACKAGE = 'xopt')
+}
+
+test_masked_sum <- function() {
+    .Call('_xopt_test_masked_sum', PACKAGE = 'xopt')
+}
+
+test_raster_mask_na <- function() {
+    .Call('_xopt_test_raster_mask_na', PACKAGE = 'xopt')
+}
+
+test_logistic_sdm_with_na <- function() {
+    .Call('_xopt_test_logistic_sdm_with_na', PACKAGE = 'xopt')
+}
+
+test_mask_intersection <- function() {
+    .Call('_xopt_test_mask_intersection', PACKAGE = 'xopt')
+}
