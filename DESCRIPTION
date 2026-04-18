@@ -1,0 +1,27 @@
+Package: xopt
+Type: Package
+Title: State-of-the-Art Optimization with Automatic Differentiation
+Version: 0.0.0.9000
+Date: 2026-04-18
+Authors@R: c(
+    person("Angel", "Robles", email = "angel.robles@example.com", role = c("aut", "cre"))
+    )
+Description: Modern optimization framework combining quasi-Newton BFGS (ucminfcpp),
+    automatic differentiation (XAD), and zero-copy tensor operations (xtensor-r).
+    Provides efficient gradient-based optimization with C++20 compiled objectives
+    for maximum performance on statistical and scientific computing problems.
+License: AGPL-3
+SystemRequirements: C++20
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 4.2.0)
+Imports:
+    Rcpp (>= 1.0.0)
+LinkingTo:
+    Rcpp
+Suggests:
+    testthat (>= 3.0.0)
+RoxygenNote: 7.2.0
+URL: https://github.com/alrobles/xopt
+BugReports: https://github.com/alrobles/xopt/issues

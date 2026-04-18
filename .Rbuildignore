@@ -1,0 +1,11 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.git$
+^\.github$
+^docs/Analysis_integration\.md$
+^docs/INTEGRATION_PLAN\.md$
+^README\.Rmd$
+^LICENSE\.md$
+^\.travis\.yml$
+^codecov\.yml$
+^_pkgdown\.yml$
