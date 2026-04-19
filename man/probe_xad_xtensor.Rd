@@ -2,10 +2,16 @@
 % Please edit documentation in R/RcppExports.R
 \name{probe_xad_xtensor}
 \alias{probe_xad_xtensor}
-\title{Probe XAD and xtensor integration}
+\title{Probe XAD integration}
 \usage{
 probe_xad_xtensor()
 }
+\value{
+Integer status code (0 = pass).
+}
 \description{
-Test that automatic differentiation works with tensor inputs
+Instantiates `xad::AReal<double>`, records `f(x) = sum(x^2)`
+  with 3 active inputs, and reports the value and adjoint gradient.
+  Returns 0 on success (printed gradients match `2 * x` to machine
+  precision), nonzero otherwise.
 }

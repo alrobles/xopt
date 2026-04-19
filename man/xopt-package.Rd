@@ -18,6 +18,6 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Angel Robles \email{angel.robles@example.com}
+\strong{Maintainer}: Angel Robles \email{a.l.robles.fernandez@gmail.com}
 
 }
