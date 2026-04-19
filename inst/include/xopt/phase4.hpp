@@ -26,10 +26,10 @@ using ConstraintFunction = std::function<void(const std::vector<double>&,
 
 struct ALControl {
     double tol = 1e-6;
-    double rho_init = 10.0;
-    double rho_max = 1e8;
-    double rho_increase_factor = 5.0;
-    double violation_improvement_factor = 0.5;
+    double rho_init = 10.0;                 // Initial AL penalty parameter (rho > 0)
+    double rho_max = 1e8;                   // Upper cap for rho growth
+    double rho_increase_factor = 5.0;       // Multiplicative rho update when progress stalls
+    double violation_improvement_factor = 0.5; // Required relative violation decrease
     int outer_maxiter = 50;
     solvers::TRNewtonControl inner_control{};
 };
@@ -228,6 +228,7 @@ inline bool intersects(const std::vector<int>& a, const std::vector<int>& b) {
 }
 
 inline double compute_fd_step(double x_val, double eps) {
+    // Relative finite-difference step that stays stable near x ~= 0.
     return eps * std::max(1.0, std::abs(x_val));
 }
 

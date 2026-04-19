@@ -140,8 +140,7 @@ int test_phase4_sparse() {
         for (int c : colors) max_color = std::max(max_color, c);
         if (max_color + 1 > 3) return 1;
 
-        // Tridiagonal matrix nnz: n diagonal + (n - 1) lower + (n - 1) upper.
-        const int expected_nnz = 3 * n - 2;
+        const int expected_nnz = 3 * n - 2; // n diagonal + 2*(n - 1) off-diagonal.
         if (static_cast<int>(csc.x.size()) != expected_nnz) return 1;
 
         for (int i = 0; i < n; ++i) {
@@ -174,9 +173,10 @@ int test_phase4_jit_checkpoint() {
         const double compiled = jit.evaluate(x);
         if (std::abs(direct - compiled) > 1e-12) return 1;
 
+        constexpr int checkpoint_stride = 5;
         int callbacks = 0;
         auto checkpoint = [&](int step, const std::vector<double>&, double) {
-            if ((step % 5) == 0) {
+            if ((step % checkpoint_stride) == 0) {
                 ++callbacks;
             }
             return step < 24;
