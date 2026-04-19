@@ -32,3 +32,39 @@ test_logistic_sdm_with_na <- function() {
 test_mask_intersection <- function() {
     .Call('_xopt_test_mask_intersection', PACKAGE = 'xopt')
 }
+
+test_lbfgs_quadratic <- function() {
+    .Call('_xopt_test_lbfgs_quadratic', PACKAGE = 'xopt')
+}
+
+test_lbfgs_rosenbrock <- function() {
+    .Call('_xopt_test_lbfgs_rosenbrock', PACKAGE = 'xopt')
+}
+
+test_lbfgs_largescale <- function() {
+    .Call('_xopt_test_lbfgs_largescale', PACKAGE = 'xopt')
+}
+
+test_lbfgsb_bounds <- function() {
+    .Call('_xopt_test_lbfgsb_bounds', PACKAGE = 'xopt')
+}
+
+test_lbfgsb_rosenbrock <- function() {
+    .Call('_xopt_test_lbfgsb_rosenbrock', PACKAGE = 'xopt')
+}
+
+test_maxent_gradient <- function() {
+    .Call('_xopt_test_maxent_gradient', PACKAGE = 'xopt')
+}
+
+test_maxent_endtoend <- function() {
+    .Call('_xopt_test_maxent_endtoend', PACKAGE = 'xopt')
+}
+
+test_chunked_processing <- function() {
+    .Call('_xopt_test_chunked_processing', PACKAGE = 'xopt')
+}
+
+test_chunked_with_na <- function() {
+    .Call('_xopt_test_chunked_with_na', PACKAGE = 'xopt')
+}

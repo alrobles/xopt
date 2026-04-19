@@ -93,6 +93,105 @@ BEGIN_RCPP
 END_RCPP
 }
 
+// test_lbfgs_quadratic
+int test_lbfgs_quadratic();
+RcppExport SEXP _xopt_test_lbfgs_quadratic() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_lbfgs_quadratic());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_lbfgs_rosenbrock
+int test_lbfgs_rosenbrock();
+RcppExport SEXP _xopt_test_lbfgs_rosenbrock() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_lbfgs_rosenbrock());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_lbfgs_largescale
+int test_lbfgs_largescale();
+RcppExport SEXP _xopt_test_lbfgs_largescale() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_lbfgs_largescale());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_lbfgsb_bounds
+int test_lbfgsb_bounds();
+RcppExport SEXP _xopt_test_lbfgsb_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_lbfgsb_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_lbfgsb_rosenbrock
+int test_lbfgsb_rosenbrock();
+RcppExport SEXP _xopt_test_lbfgsb_rosenbrock() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_lbfgsb_rosenbrock());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_maxent_gradient
+int test_maxent_gradient();
+RcppExport SEXP _xopt_test_maxent_gradient() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_maxent_gradient());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_maxent_endtoend
+int test_maxent_endtoend();
+RcppExport SEXP _xopt_test_maxent_endtoend() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_maxent_endtoend());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_chunked_processing
+int test_chunked_processing();
+RcppExport SEXP _xopt_test_chunked_processing() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_chunked_processing());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_chunked_with_na
+int test_chunked_with_na();
+RcppExport SEXP _xopt_test_chunked_with_na() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_chunked_with_na());
+    return rcpp_result_gen;
+END_RCPP
+}
+
 static const R_CallMethodDef CallEntries[] = {
     {"_xopt_probe_xad_xtensor", (DL_FUNC) &_xopt_probe_xad_xtensor, 0},
     {"_xopt_probe_sdm", (DL_FUNC) &_xopt_probe_sdm, 0},
@@ -102,6 +201,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_test_raster_mask_na", (DL_FUNC) &_xopt_test_raster_mask_na, 0},
     {"_xopt_test_logistic_sdm_with_na", (DL_FUNC) &_xopt_test_logistic_sdm_with_na, 0},
     {"_xopt_test_mask_intersection", (DL_FUNC) &_xopt_test_mask_intersection, 0},
+    {"_xopt_test_lbfgs_quadratic", (DL_FUNC) &_xopt_test_lbfgs_quadratic, 0},
+    {"_xopt_test_lbfgs_rosenbrock", (DL_FUNC) &_xopt_test_lbfgs_rosenbrock, 0},
+    {"_xopt_test_lbfgs_largescale", (DL_FUNC) &_xopt_test_lbfgs_largescale, 0},
+    {"_xopt_test_lbfgsb_bounds", (DL_FUNC) &_xopt_test_lbfgsb_bounds, 0},
+    {"_xopt_test_lbfgsb_rosenbrock", (DL_FUNC) &_xopt_test_lbfgsb_rosenbrock, 0},
+    {"_xopt_test_maxent_gradient", (DL_FUNC) &_xopt_test_maxent_gradient, 0},
+    {"_xopt_test_maxent_endtoend", (DL_FUNC) &_xopt_test_maxent_endtoend, 0},
+    {"_xopt_test_chunked_processing", (DL_FUNC) &_xopt_test_chunked_processing, 0},
+    {"_xopt_test_chunked_with_na", (DL_FUNC) &_xopt_test_chunked_with_na, 0},
     {NULL, NULL, 0}
 };
 
