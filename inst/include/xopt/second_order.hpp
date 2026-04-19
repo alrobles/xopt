@@ -64,30 +64,45 @@ inline void finite_diff_hessian(const ObjectiveFunction& fn,
     const int n = static_cast<int>(x.size());
     H.assign(n * n, 0.0);
     std::vector<double> xpp = x, xpm = x, xmp = x, xmm = x;
+    const double fx = fn(x);
 
     for (int i = 0; i < n; ++i) {
         const double hi = eps * std::max(1.0, std::abs(x[i]));
         for (int j = i; j < n; ++j) {
             const double hj = eps * std::max(1.0, std::abs(x[j]));
 
-            xpp[i] = x[i] + hi; xpp[j] = x[j] + hj;
-            xpm[i] = x[i] + hi; xpm[j] = x[j] - hj;
-            xmp[i] = x[i] - hi; xmp[j] = x[j] + hj;
-            xmm[i] = x[i] - hi; xmm[j] = x[j] - hj;
+            if (i == j) {
+                xpp[i] = x[i] + hi;
+                xmm[i] = x[i] - hi;
 
-            const double fpp = fn(xpp);
-            const double fpm = fn(xpm);
-            const double fmp = fn(xmp);
-            const double fmm = fn(xmm);
-            const double hij = (fpp - fpm - fmp + fmm) / (4.0 * hi * hj);
+                const double fp = fn(xpp);
+                const double fm = fn(xmm);
+                const double hii = (fp - 2.0 * fx + fm) / (hi * hi);
 
-            H[i * n + j] = hij;
-            H[j * n + i] = hij;
+                H[i * n + i] = hii;
 
-            xpp[i] = x[i]; xpp[j] = x[j];
-            xpm[i] = x[i]; xpm[j] = x[j];
-            xmp[i] = x[i]; xmp[j] = x[j];
-            xmm[i] = x[i]; xmm[j] = x[j];
+                xpp[i] = x[i];
+                xmm[i] = x[i];
+            } else {
+                xpp[i] = x[i] + hi; xpp[j] = x[j] + hj;
+                xpm[i] = x[i] + hi; xpm[j] = x[j] - hj;
+                xmp[i] = x[i] - hi; xmp[j] = x[j] + hj;
+                xmm[i] = x[i] - hi; xmm[j] = x[j] - hj;
+
+                const double fpp = fn(xpp);
+                const double fpm = fn(xpm);
+                const double fmp = fn(xmp);
+                const double fmm = fn(xmm);
+                const double hij = (fpp - fpm - fmp + fmm) / (4.0 * hi * hj);
+
+                H[i * n + j] = hij;
+                H[j * n + i] = hij;
+
+                xpp[i] = x[i]; xpp[j] = x[j];
+                xpm[i] = x[i]; xpm[j] = x[j];
+                xmp[i] = x[i]; xmp[j] = x[j];
+                xmm[i] = x[i]; xmm[j] = x[j];
+            }
         }
     }
 }
