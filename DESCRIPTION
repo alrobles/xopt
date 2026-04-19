@@ -20,14 +20,17 @@ Imports:
     Rcpp (>= 1.0.0)
 LinkingTo:
     Rcpp,
-    ucminfcpp
+    ucminfcpp,
+    xadr
 Suggests:
     testthat (>= 3.0.0),
     ucminfcpp,
+    xadr,
     knitr,
     rmarkdown
 Remotes:
-    alrobles/ucminfcpp
+    alrobles/ucminfcpp,
+    xadr=alrobles/xad-r
 VignetteBuilder: knitr
 RoxygenNote: 7.3.3
 URL: https://github.com/alrobles/xopt
