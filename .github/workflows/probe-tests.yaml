@@ -35,5 +35,5 @@ jobs:
 
       - name: Run probe tests
         run: |
-          Rscript -e 'library(xopt); cat("Running XAD + xtensor probe:\n"); probe_xad_xtensor(); cat("\nRunning SDM probe:\n"); probe_sdm()'
+          Rscript -e 'library(xopt); cat("Running XAD + xtensor probe:\n"); probe_xad_xtensor()'
         shell: bash

@@ -10,6 +10,7 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+<<<<<<< HEAD
 // probe_sdm
 int probe_sdm();
 RcppExport SEXP _xopt_probe_sdm() {
@@ -30,6 +31,8 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+=======
+>>>>>>> b2d690ef57a88db16177941af7f21b10f327cbf9
 // test_rosenbrock_benchmark
 int test_rosenbrock_benchmark();
 RcppExport SEXP _xopt_test_rosenbrock_benchmark() {
@@ -402,7 +405,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+<<<<<<< HEAD
     {"_xopt_probe_sdm", (DL_FUNC) &_xopt_probe_sdm, 0},
+=======
+>>>>>>> b2d690ef57a88db16177941af7f21b10f327cbf9
     {"_xopt_probe_xad_xtensor", (DL_FUNC) &_xopt_probe_xad_xtensor, 0},
     {"_xopt_test_rosenbrock_benchmark", (DL_FUNC) &_xopt_test_rosenbrock_benchmark, 0},
     {"_xopt_test_sphere_benchmark", (DL_FUNC) &_xopt_test_sphere_benchmark, 0},

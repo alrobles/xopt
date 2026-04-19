@@ -16,7 +16,6 @@
 - **Automatic gradients** via XAD tape-based autodiff
 - **Efficient tensor operations** with zero-copy xtensor integration
 - **C++20 compiled objectives** for maximum performance
-- **Species Distribution Modeling** optimized workflows
 - **AGPL-3 licensed** to match XAD dependency
 
 ## Installation
@@ -40,7 +39,6 @@ library(xopt)
 
 # Phase 0: Probe tests demonstrate basic functionality
 probe_xad_xtensor()  # Test XAD + xtensor integration
-probe_sdm()          # Test SDM optimization workflow
 ```
 
 ## Project Status
@@ -67,21 +65,6 @@ See [ENHANCED_IMPLEMENTATION_PLAN.md](docs/ENHANCED_IMPLEMENTATION_PLAN.md) for 
 - [Integration Plan](docs/INTEGRATION_PLAN.md) — Detailed integration strategy
 
 ## Use Cases
-
-### Species Distribution Modeling
-
-```r
-# Environmental raster stack
-env_stack <- array(dim = c(100, 100, 5))  # 100x100 grid, 5 variables
-
-# Optimize SDM parameters with automatic gradients (Phase 1+)
-# result <- xopt::minimize(
-#   par = initial_params,
-#   fn = sdm_objective,
-#   method = "ucminf",
-#   gradient = "auto"  # XAD provides exact gradients
-# )
-```
 
 ### General Optimization
 
