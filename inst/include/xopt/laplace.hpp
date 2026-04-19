@@ -50,6 +50,7 @@ inline LaplaceResult laplace_approximate(
     const std::vector<double>& x0,
     const second_order::ObjectiveFunction& nll,
     const second_order::GradientFunction& grad = nullptr,
+    const second_order::HvpFunction& hvp = nullptr,
     const second_order::HessianFunction& hess = nullptr,
     const solvers::TRNewtonControl& control = {}) {
     if (!nll) {
@@ -62,7 +63,7 @@ inline LaplaceResult laplace_approximate(
         throw std::invalid_argument("laplace_approximate: x0 must be non-empty");
     }
 
-    solvers::TRNewtonResult mode_fit = solvers::trust_region_newton(x0, nll, grad, nullptr, control);
+    solvers::TRNewtonResult mode_fit = solvers::trust_region_newton(x0, nll, grad, hvp, control);
     out.mode = mode_fit.par;
     out.iterations = mode_fit.iterations;
     out.convergence = mode_fit.convergence;

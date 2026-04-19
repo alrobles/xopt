@@ -135,8 +135,20 @@ xopt_minimize <- function(par,
 
     h <- .xopt_fd_hessian(fn, x)
     step <- tryCatch(
-      as.numeric(solve(h + diag(1e-8, length(x)), -g)),
-      error = function(e) rep(0, length(x))
+      as.numeric(solve(h, -g)),
+      error = function(e) {
+        lambda <- 1e-10
+        repeat {
+          trial <- tryCatch(
+            as.numeric(solve(h + diag(lambda, length(x)), -g)),
+            error = function(err) NULL
+          )
+          if (!is.null(trial) || lambda > 1) {
+            return(if (is.null(trial)) rep(0, length(x)) else trial)
+          }
+          lambda <- lambda * 10
+        }
+      }
     )
     step_norm <- sqrt(sum(step^2))
     if (step_norm > delta && step_norm > 0) {

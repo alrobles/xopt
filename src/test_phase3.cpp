@@ -10,6 +10,7 @@
 #include <xopt/laplace.hpp>
 #include <vector>
 #include <cmath>
+#include <numbers>
 
 using namespace xopt;
 
@@ -117,9 +118,9 @@ int test_phase3_laplace() {
             H = {1.0 / sigma2};
         };
 
-        auto fit = laplace_approximate({0.0}, nll, grad, hess);
+        auto fit = laplace_approximate({0.0}, nll, grad, nullptr, hess);
         if (fit.convergence == 0) return 1;
-        const double exact = 0.5 * std::log(2.0 * 3.14159265358979323846 * sigma2);
+        const double exact = 0.5 * std::log(2.0 * std::numbers::pi_v<double> * sigma2);
         if (std::abs(fit.log_marginal - exact) > 1e-8) return 1;
         return 0;
     } catch (...) {
