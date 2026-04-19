@@ -23,6 +23,7 @@ struct TRNewtonControl {
     double delta_init = 1.0;
     double delta_max = 1000.0;
     double eta = 0.15;
+    double boundary_tol = 1e-10;
 };
 
 struct TRNewtonResult {
@@ -170,7 +171,8 @@ inline TRNewtonResult trust_region_newton(
 
         if (rho < 0.25) {
             delta *= 0.25;
-        } else if (rho > 0.75 && std::abs(pnorm - delta) <= 1e-10 * std::max(1.0, delta)) {
+        } else if (rho > 0.75 &&
+                   std::abs(pnorm - delta) <= control.boundary_tol * std::max(1.0, delta)) {
             delta = std::min(2.0 * delta, control.delta_max);
         }
 

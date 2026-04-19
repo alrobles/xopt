@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <numbers>
 #include <limits>
 
 namespace xopt {
@@ -80,7 +81,7 @@ inline LaplaceResult laplace_approximate(
     }
 
     const double nll_mode = nll(out.mode);
-    const double log_two_pi = std::log(2.0 * 3.14159265358979323846);
+    const double log_two_pi = std::log(2.0 * std::numbers::pi_v<double>);
     out.log_marginal = -nll_mode + 0.5 * static_cast<double>(n) * log_two_pi - 0.5 * logdet;
     return out;
 }

@@ -167,7 +167,7 @@ xopt_minimize <- function(par,
 
     if (rho > 0.15) {
       x <- x_trial
-      if (abs(f - f_trial) <= control$xtol * (1 + abs(f))) {
+      if (abs(f - f_trial) <= control$ftol * (1 + abs(f))) {
         convergence <- 4L
         message <- "Function change below tolerance"
         iterations <- iter

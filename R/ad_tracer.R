@@ -23,12 +23,16 @@ xopt_ad_trace <- function(fn) {
     digamma = "adj_digamma", trigamma = "adj_trigamma"
   )
 
-  for (nm in names(alias)) {
-    adj_nm <- alias[[nm]]
-    if (exists(adj_nm, envir = asNamespace("xadr"), inherits = FALSE)) {
-      assign(nm, get(adj_nm, envir = asNamespace("xadr"), inherits = FALSE), envir = mask)
+  tryCatch({
+    for (nm in names(alias)) {
+      adj_nm <- alias[[nm]]
+      if (exists(adj_nm, envir = asNamespace("xadr"), inherits = FALSE)) {
+        assign(nm, get(adj_nm, envir = asNamespace("xadr"), inherits = FALSE), envir = mask)
+      }
     }
-  }
+  }, error = function(e) {
+    NULL
+  })
 
   traced <- fn
   environment(traced) <- mask
