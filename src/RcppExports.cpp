@@ -93,6 +93,83 @@ BEGIN_RCPP
 END_RCPP
 }
 
+// test_rosenbrock_benchmark
+int test_rosenbrock_benchmark();
+RcppExport SEXP _xopt_test_rosenbrock_benchmark() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_rosenbrock_benchmark());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_sphere_benchmark
+int test_sphere_benchmark();
+RcppExport SEXP _xopt_test_sphere_benchmark() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_sphere_benchmark());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_powell_singular_benchmark
+int test_powell_singular_benchmark();
+RcppExport SEXP _xopt_test_powell_singular_benchmark() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_powell_singular_benchmark());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_beale_benchmark
+int test_beale_benchmark();
+RcppExport SEXP _xopt_test_beale_benchmark() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_beale_benchmark());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_brown_badly_scaled_benchmark
+int test_brown_badly_scaled_benchmark();
+RcppExport SEXP _xopt_test_brown_badly_scaled_benchmark() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_brown_badly_scaled_benchmark());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_broyden_tridiagonal_benchmark
+int test_broyden_tridiagonal_benchmark();
+RcppExport SEXP _xopt_test_broyden_tridiagonal_benchmark() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_broyden_tridiagonal_benchmark());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_quadratic_benchmark
+int test_quadratic_benchmark();
+RcppExport SEXP _xopt_test_quadratic_benchmark() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_quadratic_benchmark());
+    return rcpp_result_gen;
+END_RCPP
+}
+
 static const R_CallMethodDef CallEntries[] = {
     {"_xopt_probe_xad_xtensor", (DL_FUNC) &_xopt_probe_xad_xtensor, 0},
     {"_xopt_probe_sdm", (DL_FUNC) &_xopt_probe_sdm, 0},
@@ -102,6 +179,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_test_raster_mask_na", (DL_FUNC) &_xopt_test_raster_mask_na, 0},
     {"_xopt_test_logistic_sdm_with_na", (DL_FUNC) &_xopt_test_logistic_sdm_with_na, 0},
     {"_xopt_test_mask_intersection", (DL_FUNC) &_xopt_test_mask_intersection, 0},
+    {"_xopt_test_rosenbrock_benchmark", (DL_FUNC) &_xopt_test_rosenbrock_benchmark, 0},
+    {"_xopt_test_sphere_benchmark", (DL_FUNC) &_xopt_test_sphere_benchmark, 0},
+    {"_xopt_test_powell_singular_benchmark", (DL_FUNC) &_xopt_test_powell_singular_benchmark, 0},
+    {"_xopt_test_beale_benchmark", (DL_FUNC) &_xopt_test_beale_benchmark, 0},
+    {"_xopt_test_brown_badly_scaled_benchmark", (DL_FUNC) &_xopt_test_brown_badly_scaled_benchmark, 0},
+    {"_xopt_test_broyden_tridiagonal_benchmark", (DL_FUNC) &_xopt_test_broyden_tridiagonal_benchmark, 0},
+    {"_xopt_test_quadratic_benchmark", (DL_FUNC) &_xopt_test_quadratic_benchmark, 0},
     {NULL, NULL, 0}
 };
 

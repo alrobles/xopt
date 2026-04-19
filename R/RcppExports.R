@@ -32,3 +32,31 @@ test_logistic_sdm_with_na <- function() {
 test_mask_intersection <- function() {
     .Call('_xopt_test_mask_intersection', PACKAGE = 'xopt')
 }
+
+test_rosenbrock_benchmark <- function() {
+    .Call('_xopt_test_rosenbrock_benchmark', PACKAGE = 'xopt')
+}
+
+test_sphere_benchmark <- function() {
+    .Call('_xopt_test_sphere_benchmark', PACKAGE = 'xopt')
+}
+
+test_powell_singular_benchmark <- function() {
+    .Call('_xopt_test_powell_singular_benchmark', PACKAGE = 'xopt')
+}
+
+test_beale_benchmark <- function() {
+    .Call('_xopt_test_beale_benchmark', PACKAGE = 'xopt')
+}
+
+test_brown_badly_scaled_benchmark <- function() {
+    .Call('_xopt_test_brown_badly_scaled_benchmark', PACKAGE = 'xopt')
+}
+
+test_broyden_tridiagonal_benchmark <- function() {
+    .Call('_xopt_test_broyden_tridiagonal_benchmark', PACKAGE = 'xopt')
+}
+
+test_quadratic_benchmark <- function() {
+    .Call('_xopt_test_quadratic_benchmark', PACKAGE = 'xopt')
+}
