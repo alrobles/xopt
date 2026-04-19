@@ -6,3 +6,6 @@ src/*.o
 src/*.so
 src/*.dll
 *.tar.gz
+inst/include/xtl/
+inst/include/xtensor/
+inst/include/XAD/
