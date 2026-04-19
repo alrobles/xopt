@@ -138,13 +138,12 @@ struct Problem : public ProblemBase<Scalar> {
 
     // Query HVP availability
     static constexpr bool has_hvp() {
-        return Hess != HessKind::None &&
-               (requires(const UserObj& o, const Scalar* px, const Scalar* pv, Scalar* phv) {
-                    o.hessian_vector_product(px, pv, phv);
-                } ||
-                requires(const UserObj& o, const Scalar* px, Scalar* pH) {
-                    o.hessian(px, pH);
-                });
+        return requires(const UserObj& o, const Scalar* px, const Scalar* pv, Scalar* phv) {
+                   o.hessian_vector_product(px, pv, phv);
+               } ||
+               requires(const UserObj& o, const Scalar* px, Scalar* pH) {
+                   o.hessian(px, pH);
+               };
     }
 
     // Query gradient kind
