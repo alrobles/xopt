@@ -125,6 +125,7 @@ xopt_minimize <- function(par,
   iterations <- 0L
 
   for (iter in seq_len(maxiter)) {
+    iterations <- iter
     g <- gr(x)
     if (max(abs(g)) <= control$grtol) {
       convergence <- 1L
@@ -189,7 +190,6 @@ xopt_minimize <- function(par,
       f <- f_trial
     }
 
-    iterations <- iter
   }
 
   structure(

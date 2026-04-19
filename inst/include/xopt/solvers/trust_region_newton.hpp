@@ -191,7 +191,7 @@ inline TRNewtonResult trust_region_newton(
         result.iterations = iter + 1;
     }
 
-    if (result.convergence == 0 && result.iterations >= control.maxiter) {
+    if (result.convergence == 0) {
         result.message = "Maximum iterations reached";
     }
 
