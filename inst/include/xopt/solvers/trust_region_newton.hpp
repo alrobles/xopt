@@ -49,9 +49,13 @@ inline double steihaug_tau_to_boundary(const std::vector<double>& p,
     const double pp = second_order::dot(p, p);
     const double pd = second_order::dot(p, d);
     const double dd = second_order::dot(d, d);
+    if (dd <= std::numeric_limits<double>::epsilon()) {
+        return 0.0;
+    }
     const double c = pp - delta * delta;
     const double disc = std::max(0.0, pd * pd - dd * c);
-    return (-pd + std::sqrt(disc)) / dd;
+    const double tau = (-pd + std::sqrt(disc)) / dd;
+    return std::max(0.0, tau);
 }
 
 inline std::vector<double> steihaug_cg(const std::vector<double>& g,
