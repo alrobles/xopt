@@ -357,6 +357,39 @@ BEGIN_RCPP
 END_RCPP
 }
 
+// test_phase3_hessian_hvp
+int test_phase3_hessian_hvp();
+RcppExport SEXP _xopt_test_phase3_hessian_hvp() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_phase3_hessian_hvp());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_phase3_trust_region_newton
+int test_phase3_trust_region_newton();
+RcppExport SEXP _xopt_test_phase3_trust_region_newton() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_phase3_trust_region_newton());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_phase3_laplace
+int test_phase3_laplace();
+RcppExport SEXP _xopt_test_phase3_laplace() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_phase3_laplace());
+    return rcpp_result_gen;
+END_RCPP
+}
+
 static const R_CallMethodDef CallEntries[] = {
     {"_xopt_probe_xad_xtensor", (DL_FUNC) &_xopt_probe_xad_xtensor, 0},
     {"_xopt_probe_sdm", (DL_FUNC) &_xopt_probe_sdm, 0},
@@ -390,6 +423,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_test_nls_osborne1", (DL_FUNC) &_xopt_test_nls_osborne1, 0},
     {"_xopt_test_nls_helical_valley", (DL_FUNC) &_xopt_test_nls_helical_valley, 0},
     {"_xopt_test_nls_performance", (DL_FUNC) &_xopt_test_nls_performance, 0},
+    {"_xopt_test_phase3_hessian_hvp", (DL_FUNC) &_xopt_test_phase3_hessian_hvp, 0},
+    {"_xopt_test_phase3_trust_region_newton", (DL_FUNC) &_xopt_test_phase3_trust_region_newton, 0},
+    {"_xopt_test_phase3_laplace", (DL_FUNC) &_xopt_test_phase3_laplace, 0},
     {NULL, NULL, 0}
 };
 

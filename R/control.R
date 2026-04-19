@@ -7,6 +7,7 @@
 #' @param maxiter Maximum number of function evaluations.
 #' @param trace Logical; if TRUE, print trace output during optimization.
 #' @param stepmax Initial trust region radius.
+#' @param ftol Relative objective-function tolerance.
 #'
 #' @return A list of control parameters.
 #' @export
@@ -14,14 +15,16 @@ xopt_control <- function(grtol = 1e-6,
                          xtol = 1e-12,
                          maxiter = 500,
                          trace = FALSE,
-                         stepmax = 1.0) {
+                         stepmax = 1.0,
+                         ftol = 1e-12) {
   structure(
     list(
       grtol = grtol,
       xtol = xtol,
       maxiter = maxiter,
       trace = trace,
-      stepmax = stepmax
+      stepmax = stepmax,
+      ftol = ftol
     ),
     class = "xopt_control"
   )
@@ -35,5 +38,6 @@ print.xopt_control <- function(x, ...) {
   cat(sprintf("  maxiter: %d\n", x$maxiter))
   cat(sprintf("  trace:   %s\n", x$trace))
   cat(sprintf("  stepmax: %g\n", x$stepmax))
+  cat(sprintf("  ftol:    %g\n", x$ftol))
   invisible(x)
 }
