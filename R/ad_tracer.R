@@ -39,6 +39,7 @@ xopt_ad_trace <- function(fn) {
   traced
 }
 
+# Central-difference gradient fallback for plain R objectives.
 .xopt_fd_gradient <- function(fn, par, eps = 1e-6) {
   g <- numeric(length(par))
   x_plus <- par

@@ -205,6 +205,7 @@ xopt_minimize <- function(par,
   )
 }
 
+# Central-difference Hessian fallback used by R trust-region Newton.
 .xopt_fd_hessian <- function(fn, par, eps = 1e-4) {
   n <- length(par)
   H <- matrix(0, n, n)
