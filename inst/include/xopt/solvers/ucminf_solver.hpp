@@ -104,7 +104,9 @@ inline UcminfResult ucminf_solve(
     const UcminfControl& control = {}) {
 
     ucminf::Control uc_ctrl = control.to_ucminf();
-    ucminf::Result res = ucminf::minimize(x0, fdf, uc_ctrl);
+    // Use the header-only minimize_direct<F> rather than the non-inline
+    // minimize() overload so LinkingTo: ucminfcpp (headers only) is sufficient.
+    ucminf::Result res = ucminf::minimize_direct(x0, fdf, uc_ctrl);
 
     return UcminfResult::from_ucminf(res);
 }
