@@ -390,6 +390,50 @@ BEGIN_RCPP
 END_RCPP
 }
 
+// test_phase4_constraints
+int test_phase4_constraints();
+RcppExport SEXP _xopt_test_phase4_constraints() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_phase4_constraints());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_phase4_multistart_parallel
+int test_phase4_multistart_parallel();
+RcppExport SEXP _xopt_test_phase4_multistart_parallel() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_phase4_multistart_parallel());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_phase4_sparse
+int test_phase4_sparse();
+RcppExport SEXP _xopt_test_phase4_sparse() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_phase4_sparse());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_phase4_jit_checkpoint
+int test_phase4_jit_checkpoint();
+RcppExport SEXP _xopt_test_phase4_jit_checkpoint() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_phase4_jit_checkpoint());
+    return rcpp_result_gen;
+END_RCPP
+}
+
 static const R_CallMethodDef CallEntries[] = {
     {"_xopt_probe_xad_xtensor", (DL_FUNC) &_xopt_probe_xad_xtensor, 0},
     {"_xopt_probe_sdm", (DL_FUNC) &_xopt_probe_sdm, 0},
@@ -426,6 +470,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_test_phase3_hessian_hvp", (DL_FUNC) &_xopt_test_phase3_hessian_hvp, 0},
     {"_xopt_test_phase3_trust_region_newton", (DL_FUNC) &_xopt_test_phase3_trust_region_newton, 0},
     {"_xopt_test_phase3_laplace", (DL_FUNC) &_xopt_test_phase3_laplace, 0},
+    {"_xopt_test_phase4_constraints", (DL_FUNC) &_xopt_test_phase4_constraints, 0},
+    {"_xopt_test_phase4_multistart_parallel", (DL_FUNC) &_xopt_test_phase4_multistart_parallel, 0},
+    {"_xopt_test_phase4_sparse", (DL_FUNC) &_xopt_test_phase4_sparse, 0},
+    {"_xopt_test_phase4_jit_checkpoint", (DL_FUNC) &_xopt_test_phase4_jit_checkpoint, 0},
     {NULL, NULL, 0}
 };
 
