@@ -324,6 +324,39 @@ BEGIN_RCPP
 END_RCPP
 }
 
+// test_nls_osborne1
+int test_nls_osborne1();
+RcppExport SEXP _xopt_test_nls_osborne1() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_nls_osborne1());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_nls_helical_valley
+int test_nls_helical_valley();
+RcppExport SEXP _xopt_test_nls_helical_valley() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_nls_helical_valley());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_nls_performance
+int test_nls_performance();
+RcppExport SEXP _xopt_test_nls_performance() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_nls_performance());
+    return rcpp_result_gen;
+END_RCPP
+}
+
 static const R_CallMethodDef CallEntries[] = {
     {"_xopt_probe_xad_xtensor", (DL_FUNC) &_xopt_probe_xad_xtensor, 0},
     {"_xopt_probe_sdm", (DL_FUNC) &_xopt_probe_sdm, 0},
@@ -354,6 +387,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_test_multistart_rastrigin", (DL_FUNC) &_xopt_test_multistart_rastrigin, 0},
     {"_xopt_test_multistart_deterministic", (DL_FUNC) &_xopt_test_multistart_deterministic, 0},
     {"_xopt_test_multistart_scaling", (DL_FUNC) &_xopt_test_multistart_scaling, 0},
+    {"_xopt_test_nls_osborne1", (DL_FUNC) &_xopt_test_nls_osborne1, 0},
+    {"_xopt_test_nls_helical_valley", (DL_FUNC) &_xopt_test_nls_helical_valley, 0},
+    {"_xopt_test_nls_performance", (DL_FUNC) &_xopt_test_nls_performance, 0},
     {NULL, NULL, 0}
 };
 

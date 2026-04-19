@@ -116,3 +116,15 @@ test_multistart_deterministic <- function() {
 test_multistart_scaling <- function() {
     .Call('_xopt_test_multistart_scaling', PACKAGE = 'xopt')
 }
+
+test_nls_osborne1 <- function() {
+    .Call('_xopt_test_nls_osborne1', PACKAGE = 'xopt')
+}
+
+test_nls_helical_valley <- function() {
+    .Call('_xopt_test_nls_helical_valley', PACKAGE = 'xopt')
+}
+
+test_nls_performance <- function() {
+    .Call('_xopt_test_nls_performance', PACKAGE = 'xopt')
+}
