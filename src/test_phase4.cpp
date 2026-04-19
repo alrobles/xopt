@@ -140,6 +140,7 @@ int test_phase4_sparse() {
         for (int c : colors) max_color = std::max(max_color, c);
         if (max_color + 1 > 3) return 1;
 
+        // Tridiagonal matrix nnz: n diagonal + (n - 1) lower + (n - 1) upper.
         const int expected_nnz = 3 * n - 2;
         if (static_cast<int>(csc.x.size()) != expected_nnz) return 1;
 

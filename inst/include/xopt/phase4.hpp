@@ -10,6 +10,7 @@
 #include <functional>
 #include <limits>
 #include <string>
+#include <stdexcept>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -27,6 +28,8 @@ struct ALControl {
     double tol = 1e-6;
     double rho_init = 10.0;
     double rho_max = 1e8;
+    double rho_increase_factor = 5.0;
+    double violation_improvement_factor = 0.5;
     int outer_maxiter = 50;
     solvers::TRNewtonControl inner_control{};
 };
@@ -53,19 +56,20 @@ inline double augmented_objective(const std::vector<double>& x,
                                   const ConstraintFunction& constraints,
                                   const std::vector<double>& lambda_eq,
                                   const std::vector<double>& lambda_ineq,
-                                  double rho) {
+                                  double penalty_param) {
     std::vector<double> c_eq;
     std::vector<double> c_ineq;
     constraints(x, c_eq, c_ineq);
 
     double out = objective(x);
     for (size_t i = 0; i < c_eq.size(); ++i) {
-        out += lambda_eq[i] * c_eq[i] + 0.5 * rho * c_eq[i] * c_eq[i];
+        out += lambda_eq[i] * c_eq[i] + 0.5 * penalty_param * c_eq[i] * c_eq[i];
     }
     for (size_t i = 0; i < c_ineq.size(); ++i) {
-        const double shifted = lambda_ineq[i] / rho + c_ineq[i];
+        const double shifted = lambda_ineq[i] / penalty_param + c_ineq[i];
         const double pos = std::max(0.0, shifted);
-        out += 0.5 * rho * (pos * pos - (lambda_ineq[i] / rho) * (lambda_ineq[i] / rho));
+        out += 0.5 * penalty_param * (pos * pos -
+            (lambda_ineq[i] / penalty_param) * (lambda_ineq[i] / penalty_param));
     }
     return out;
 }
@@ -97,14 +101,16 @@ inline ALResult augmented_lagrangian_solve(const std::vector<double>& x0,
         if (gradient) {
             aug_grad = [&](const std::vector<double>& xv, std::vector<double>& g) {
                 gradient(xv, g);
-                std::vector<double> g_aug;
-                second_order::finite_diff_gradient(aug_fn, xv, g_aug);
-                if (g_aug.size() != g.size()) {
-                    g = std::move(g_aug);
-                    return;
+                auto penalty_fn = [&](const std::vector<double>& xp) {
+                    return aug_fn(xp) - objective(xp);
+                };
+                std::vector<double> g_penalty;
+                second_order::finite_diff_gradient(penalty_fn, xv, g_penalty);
+                if (g_penalty.size() != g.size()) {
+                    throw std::runtime_error("augmented_lagrangian_solve: gradient size mismatch");
                 }
                 for (size_t i = 0; i < g.size(); ++i) {
-                    g[i] = g_aug[i];
+                    g[i] += g_penalty[i];
                 }
             };
         } else {
@@ -128,10 +134,10 @@ inline ALResult augmented_lagrangian_solve(const std::vector<double>& x0,
 
         result.outer_iterations = outer + 1;
         result.constraint_violation = violation;
-        if (violation < best_violation * 0.5) {
+        if (violation < best_violation * control.violation_improvement_factor) {
             best_violation = violation;
         } else {
-            rho = std::min(control.rho_max, rho * 5.0);
+            rho = std::min(control.rho_max, rho * control.rho_increase_factor);
         }
 
         if (violation <= control.tol) {
@@ -172,7 +178,7 @@ inline MultiStartResult<SolveFn, Result> parallel_multi_start(
         return out;
     }
 
-    const size_t workers = std::max<size_t>(1, std::min(n, n_threads == 0 ? 1 : n_threads));
+    const size_t workers = std::max<size_t>(1, std::min(n, n_threads));
     std::atomic<size_t> next{0};
 
     std::vector<std::thread> threads;
@@ -221,6 +227,10 @@ inline bool intersects(const std::vector<int>& a, const std::vector<int>& b) {
     return false;
 }
 
+inline double compute_fd_step(double x_val, double eps) {
+    return eps * std::max(1.0, std::abs(x_val));
+}
+
 inline SparsePattern detect_jacobian_sparsity(
     const std::function<void(const std::vector<double>&, std::vector<double>&)>& residual_fn,
     const std::vector<double>& x,
@@ -236,15 +246,15 @@ inline SparsePattern detect_jacobian_sparsity(
     std::vector<double> xp = x;
 
     for (int j = 0; j < n; ++j) {
-        const double h = eps * std::max(1.0, std::abs(x[j]));
+        const double h = compute_fd_step(x[j], eps);
         xp[j] += h;
         std::vector<double> rp;
         residual_fn(xp, rp);
         xp[j] = x[j];
 
         for (int i = 0; i < m; ++i) {
-            const double d = (rp[i] - r0[i]) / h;
-            if (std::abs(d) > tol) {
+            const double derivative = (rp[i] - r0[i]) / h;
+            if (std::abs(derivative) > tol) {
                 pattern[j].push_back(i);
             }
         }
@@ -299,7 +309,7 @@ inline std::vector<double> compressed_fd_jacobian(
         for (int j = 0; j < n; ++j) {
             if (colors[static_cast<size_t>(j)] == color) {
                 cols.push_back(j);
-                xp[static_cast<size_t>(j)] += eps * std::max(1.0, std::abs(x[static_cast<size_t>(j)]));
+                xp[static_cast<size_t>(j)] += compute_fd_step(x[static_cast<size_t>(j)], eps);
             }
         }
 
@@ -309,7 +319,7 @@ inline std::vector<double> compressed_fd_jacobian(
         residual_fn(xp, rp);
 
         for (int j : cols) {
-            const double h = eps * std::max(1.0, std::abs(x[static_cast<size_t>(j)]));
+            const double h = compute_fd_step(x[static_cast<size_t>(j)], eps);
             for (int i : pattern[static_cast<size_t>(j)]) {
                 J[static_cast<size_t>(i * n + j)] = (rp[static_cast<size_t>(i)] - r0[static_cast<size_t>(i)]) / h;
             }
