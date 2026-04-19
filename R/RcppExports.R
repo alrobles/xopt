@@ -140,3 +140,19 @@ test_phase3_trust_region_newton <- function() {
 test_phase3_laplace <- function() {
     .Call('_xopt_test_phase3_laplace', PACKAGE = 'xopt')
 }
+
+test_phase4_constraints <- function() {
+    .Call('_xopt_test_phase4_constraints', PACKAGE = 'xopt')
+}
+
+test_phase4_multistart_parallel <- function() {
+    .Call('_xopt_test_phase4_multistart_parallel', PACKAGE = 'xopt')
+}
+
+test_phase4_sparse <- function() {
+    .Call('_xopt_test_phase4_sparse', PACKAGE = 'xopt')
+}
+
+test_phase4_jit_checkpoint <- function() {
+    .Call('_xopt_test_phase4_jit_checkpoint', PACKAGE = 'xopt')
+}
