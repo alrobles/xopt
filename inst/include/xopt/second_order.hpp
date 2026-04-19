@@ -126,14 +126,15 @@ inline void finite_diff_hvp(const ObjectiveFunction& fn,
                             const std::vector<double>& x,
                             const std::vector<double>& v,
                             std::vector<double>& hv,
-                            double eps = 1e-6) {
+                            double eps_outer = 1e-4,
+                            double eps_inner = 1e-6) {
     if (x.size() != v.size()) {
         throw std::invalid_argument("finite_diff_hvp: size mismatch");
     }
 
     std::vector<double> xp = x;
     std::vector<double> xm = x;
-    const double scale = eps / std::max(1.0, norm2(v));
+    const double scale = eps_outer / std::max(1.0, norm2(v));
     for (size_t i = 0; i < x.size(); ++i) {
         xp[i] += scale * v[i];
         xm[i] -= scale * v[i];
@@ -141,8 +142,8 @@ inline void finite_diff_hvp(const ObjectiveFunction& fn,
 
     std::vector<double> gp;
     std::vector<double> gm;
-    finite_diff_gradient(fn, xp, gp, eps);
-    finite_diff_gradient(fn, xm, gm, eps);
+    finite_diff_gradient(fn, xp, gp, eps_inner);
+    finite_diff_gradient(fn, xm, gm, eps_inner);
 
     hv.assign(x.size(), 0.0);
     for (size_t i = 0; i < x.size(); ++i) {
