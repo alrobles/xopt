@@ -40,6 +40,26 @@ test_quadratic_benchmark <- function() {
     .Call(`_xopt_test_quadratic_benchmark`)
 }
 
+#' Adjoint dL/dλ for L(β*(λ)) = ‖β*(λ)‖² via IFT
+#' @param X numeric matrix n × p
+#' @param y numeric vector length n
+#' @param lambda scalar ridge penalty (λ > 0)
+#' @return scalar dL/dλ computed through xopt::implicit_::implicit_spd
+xopt_implicit_spd_grad_ridge <- function(X, y, lambda) {
+    .Call(`_xopt_xopt_implicit_spd_grad_ridge`, X, y, lambda)
+}
+
+#' Direct IFT cotangent: θ̄ = −B^T A^{-1} x̄
+#' @param A numeric SPD matrix n × n
+#' @param B numeric matrix n × p
+#' @param x_star numeric vector length n (used as the forward x*, but the
+#'   cotangent formula depends only on A, B, x_bar)
+#' @param x_bar numeric vector length n (upstream gradient ∂L/∂x*)
+#' @return numeric vector length p: θ̄
+xopt_implicit_spd_grad_generic <- function(A, B, x_star, x_bar) {
+    .Call(`_xopt_xopt_implicit_spd_grad_generic`, A, B, x_star, x_bar)
+}
+
 #' Forward-mode Cholesky on double
 #' @param A numeric SPD matrix (n x n)
 #' @return lower-triangular Cholesky factor L (n x n) with A = L L^T

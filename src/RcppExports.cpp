@@ -90,6 +90,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// xopt_implicit_spd_grad_ridge
+double xopt_implicit_spd_grad_ridge(Rcpp::NumericMatrix X, Rcpp::NumericVector y, double lambda);
+RcppExport SEXP _xopt_xopt_implicit_spd_grad_ridge(SEXP XSEXP, SEXP ySEXP, SEXP lambdaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_implicit_spd_grad_ridge(X, y, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
+// xopt_implicit_spd_grad_generic
+Rcpp::NumericVector xopt_implicit_spd_grad_generic(Rcpp::NumericMatrix A, Rcpp::NumericMatrix B, Rcpp::NumericVector x_star, Rcpp::NumericVector x_bar);
+RcppExport SEXP _xopt_xopt_implicit_spd_grad_generic(SEXP ASEXP, SEXP BSEXP, SEXP x_starSEXP, SEXP x_barSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type B(BSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_star(x_starSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_bar(x_barSEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_implicit_spd_grad_generic(A, B, x_star, x_bar));
+    return rcpp_result_gen;
+END_RCPP
+}
 // xopt_chol_impl
 Rcpp::NumericMatrix xopt_chol_impl(Rcpp::NumericMatrix A);
 RcppExport SEXP _xopt_xopt_chol_impl(SEXP ASEXP) {
@@ -443,6 +470,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_test_brown_badly_scaled_benchmark", (DL_FUNC) &_xopt_test_brown_badly_scaled_benchmark, 0},
     {"_xopt_test_broyden_tridiagonal_benchmark", (DL_FUNC) &_xopt_test_broyden_tridiagonal_benchmark, 0},
     {"_xopt_test_quadratic_benchmark", (DL_FUNC) &_xopt_test_quadratic_benchmark, 0},
+    {"_xopt_xopt_implicit_spd_grad_ridge", (DL_FUNC) &_xopt_xopt_implicit_spd_grad_ridge, 3},
+    {"_xopt_xopt_implicit_spd_grad_generic", (DL_FUNC) &_xopt_xopt_implicit_spd_grad_generic, 4},
     {"_xopt_xopt_chol_impl", (DL_FUNC) &_xopt_xopt_chol_impl, 1},
     {"_xopt_xopt_solve_impl", (DL_FUNC) &_xopt_xopt_solve_impl, 2},
     {"_xopt_xopt_logdet_impl", (DL_FUNC) &_xopt_xopt_logdet_impl, 1},
