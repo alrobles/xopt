@@ -13,6 +13,7 @@
 #include <stdexcept>
 #include <string>
 #include <cmath>
+#include <type_traits>
 
 namespace xopt {
 
@@ -103,6 +104,28 @@ struct Problem : public ProblemBase<Scalar> {
         }
     }
 
+    // Compute Hessian-vector product at x in direction v (if available)
+    // Fallback: dense Hessian-vector multiply when only hessian() is provided
+    void hessian_vector_product(const Scalar* x, const Scalar* v, Scalar* hv) const {
+        if constexpr (Hess == HessKind::None) {
+            throw std::runtime_error("Hessian-vector product not available for this problem");
+        } else if constexpr (requires(const UserObj& o, const Scalar* px,
+                                      const Scalar* pv, Scalar* phv) { o.hessian_vector_product(px, pv, phv); }) {
+            obj.hessian_vector_product(x, v, hv);
+        } else if constexpr (requires(const UserObj& o, const Scalar* px, Scalar* pH) { o.hessian(px, pH); }) {
+            std::vector<Scalar> H(static_cast<size_t>(this->n_par * this->n_par));
+            obj.hessian(x, H.data());
+            for (int i = 0; i < this->n_par; ++i) {
+                hv[i] = 0;
+                for (int j = 0; j < this->n_par; ++j) {
+                    hv[i] += H[i * this->n_par + j] * v[j];
+                }
+            }
+        } else {
+            throw std::runtime_error("Hessian-vector product not implemented by objective");
+        }
+    }
+
     // Query gradient availability
     static constexpr bool has_gradient() {
         return Grad != GradKind::None;
@@ -110,6 +133,11 @@ struct Problem : public ProblemBase<Scalar> {
 
     // Query Hessian availability
     static constexpr bool has_hessian() {
+        return Hess != HessKind::None;
+    }
+
+    // Query HVP availability
+    static constexpr bool has_hvp() {
         return Hess != HessKind::None;
     }
 

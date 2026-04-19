@@ -128,3 +128,15 @@ test_nls_helical_valley <- function() {
 test_nls_performance <- function() {
     .Call('_xopt_test_nls_performance', PACKAGE = 'xopt')
 }
+
+test_phase3_hessian_hvp <- function() {
+    .Call('_xopt_test_phase3_hessian_hvp', PACKAGE = 'xopt')
+}
+
+test_phase3_trust_region_newton <- function() {
+    .Call('_xopt_test_phase3_trust_region_newton', PACKAGE = 'xopt')
+}
+
+test_phase3_laplace <- function() {
+    .Call('_xopt_test_phase3_laplace', PACKAGE = 'xopt')
+}
