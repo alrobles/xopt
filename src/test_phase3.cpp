@@ -15,7 +15,6 @@
 
 using namespace xopt;
 
-// [[Rcpp::export]]
 int test_phase3_hessian_hvp() {
     try {
         // f(x) = 0.5 * x^T A x, A symmetric
@@ -65,7 +64,6 @@ struct IllConditionedQuad : public xopt::ProblemBase<double> {
     static constexpr GradKind gradient_kind() { return GradKind::UserFn; }
 };
 
-// [[Rcpp::export]]
 int test_phase3_trust_region_newton() {
     try {
         std::vector<double> x0 = {10.0, 10.0};
@@ -102,7 +100,6 @@ int test_phase3_trust_region_newton() {
     }
 }
 
-// [[Rcpp::export]]
 int test_phase3_laplace() {
     try {
         const double mu = 0.7;

@@ -12,34 +12,6 @@ probe_xad_xtensor <- function() {
     .Call(`_xopt_probe_xad_xtensor`)
 }
 
-test_rosenbrock_benchmark <- function() {
-    .Call(`_xopt_test_rosenbrock_benchmark`)
-}
-
-test_sphere_benchmark <- function() {
-    .Call(`_xopt_test_sphere_benchmark`)
-}
-
-test_powell_singular_benchmark <- function() {
-    .Call(`_xopt_test_powell_singular_benchmark`)
-}
-
-test_beale_benchmark <- function() {
-    .Call(`_xopt_test_beale_benchmark`)
-}
-
-test_brown_badly_scaled_benchmark <- function() {
-    .Call(`_xopt_test_brown_badly_scaled_benchmark`)
-}
-
-test_broyden_tridiagonal_benchmark <- function() {
-    .Call(`_xopt_test_broyden_tridiagonal_benchmark`)
-}
-
-test_quadratic_benchmark <- function() {
-    .Call(`_xopt_test_quadratic_benchmark`)
-}
-
 #' Adjoint dL/dλ for L(β*(λ)) = ‖β*(λ)‖² via IFT
 #' @param X numeric matrix n × p
 #' @param y numeric vector length n
@@ -127,99 +99,35 @@ xopt_linalg_tape_bytes <- function(A, op) {
     .Call(`_xopt_xopt_linalg_tape_bytes`, A, op)
 }
 
-test_multistart_rosenbrock <- function() {
-    .Call(`_xopt_test_multistart_rosenbrock`)
+xopt_internal_run_test <- function(name) {
+    .Call(`_xopt_xopt_internal_run_test`, name)
 }
 
-test_multistart_rastrigin <- function() {
-    .Call(`_xopt_test_multistart_rastrigin`)
+#' Trust-region Newton solver via C++
+#'
+#' @param par Numeric vector of initial parameters.
+#' @param fn Objective function returning a scalar.
+#' @param gr Optional gradient function returning a numeric vector.
+#' @param hvp Optional Hessian-vector product callback taking `(x, v)`.
+#' @param control Optional control list (`gtol`, `xtol`, `ftol`, `maxiter`,
+#'   `cg_maxiter`, `delta_init`, `delta_max`, `eta`, `boundary_tol`).
+#' @return An object of class `"xopt_result"`.
+#' @export
+xopt_tr_newton_cpp <- function(par, fn, gr = NULL, hvp = NULL, control = NULL) {
+    .Call(`_xopt_xopt_tr_newton_cpp`, par, fn, gr, hvp, control)
 }
 
-test_multistart_deterministic <- function() {
-    .Call(`_xopt_test_multistart_deterministic`)
-}
-
-test_multistart_scaling <- function() {
-    .Call(`_xopt_test_multistart_scaling`)
-}
-
-test_nls_exponential_decay <- function() {
-    .Call(`_xopt_test_nls_exponential_decay`)
-}
-
-test_nls_misra1a <- function() {
-    .Call(`_xopt_test_nls_misra1a`)
-}
-
-test_nls_linear <- function() {
-    .Call(`_xopt_test_nls_linear`)
-}
-
-test_nls_jacobian_accuracy <- function() {
-    .Call(`_xopt_test_nls_jacobian_accuracy`)
-}
-
-test_nls_covariance <- function() {
-    .Call(`_xopt_test_nls_covariance`)
-}
-
-test_nls_osborne1 <- function() {
-    .Call(`_xopt_test_nls_osborne1`)
-}
-
-test_nls_helical_valley <- function() {
-    .Call(`_xopt_test_nls_helical_valley`)
-}
-
-test_nls_performance <- function() {
-    .Call(`_xopt_test_nls_performance`)
-}
-
-test_param_spec_roundtrip <- function() {
-    .Call(`_xopt_test_param_spec_roundtrip`)
-}
-
-test_positive_transform <- function() {
-    .Call(`_xopt_test_positive_transform`)
-}
-
-test_bounded_transform <- function() {
-    .Call(`_xopt_test_bounded_transform`)
-}
-
-test_rosenbrock_structured <- function() {
-    .Call(`_xopt_test_rosenbrock_structured`)
-}
-
-test_positive_constrained_mle <- function() {
-    .Call(`_xopt_test_positive_constrained_mle`)
-}
-
-test_phase3_hessian_hvp <- function() {
-    .Call(`_xopt_test_phase3_hessian_hvp`)
-}
-
-test_phase3_trust_region_newton <- function() {
-    .Call(`_xopt_test_phase3_trust_region_newton`)
-}
-
-test_phase3_laplace <- function() {
-    .Call(`_xopt_test_phase3_laplace`)
-}
-
-test_phase4_constraints <- function() {
-    .Call(`_xopt_test_phase4_constraints`)
-}
-
-test_phase4_multistart_parallel <- function() {
-    .Call(`_xopt_test_phase4_multistart_parallel`)
-}
-
-test_phase4_sparse <- function() {
-    .Call(`_xopt_test_phase4_sparse`)
-}
-
-test_phase4_jit_checkpoint <- function() {
-    .Call(`_xopt_test_phase4_jit_checkpoint`)
+#' Nonlinear least squares (Levenberg-Marquardt) via C++
+#'
+#' @param par Numeric vector of initial parameters.
+#' @param residual_fn Residual callback returning a numeric vector.
+#' @param jacobian_fn Optional Jacobian callback returning an `m x n` matrix.
+#' @param control Optional control list (`ftol`, `xtol`, `gtol`, `maxiter`,
+#'   `lambda_init`, `lambda_up`, `lambda_down`, `trace`).
+#' @return A list with NLS results (`par`, `value`, `residuals`, `gradient`,
+#'   `jacobian`, `vcov`, `iterations`, `convergence`, `message`).
+#' @export
+xopt_nls_cpp <- function(par, residual_fn, jacobian_fn = NULL, control = NULL) {
+    .Call(`_xopt_xopt_nls_cpp`, par, residual_fn, jacobian_fn, control)
 }
 

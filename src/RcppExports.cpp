@@ -20,76 +20,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// test_rosenbrock_benchmark
-int test_rosenbrock_benchmark();
-RcppExport SEXP _xopt_test_rosenbrock_benchmark() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_rosenbrock_benchmark());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_sphere_benchmark
-int test_sphere_benchmark();
-RcppExport SEXP _xopt_test_sphere_benchmark() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_sphere_benchmark());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_powell_singular_benchmark
-int test_powell_singular_benchmark();
-RcppExport SEXP _xopt_test_powell_singular_benchmark() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_powell_singular_benchmark());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_beale_benchmark
-int test_beale_benchmark();
-RcppExport SEXP _xopt_test_beale_benchmark() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_beale_benchmark());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_brown_badly_scaled_benchmark
-int test_brown_badly_scaled_benchmark();
-RcppExport SEXP _xopt_test_brown_badly_scaled_benchmark() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_brown_badly_scaled_benchmark());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_broyden_tridiagonal_benchmark
-int test_broyden_tridiagonal_benchmark();
-RcppExport SEXP _xopt_test_broyden_tridiagonal_benchmark() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_broyden_tridiagonal_benchmark());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_quadratic_benchmark
-int test_quadratic_benchmark();
-RcppExport SEXP _xopt_test_quadratic_benchmark() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_quadratic_benchmark());
-    return rcpp_result_gen;
-END_RCPP
-}
 // xopt_implicit_spd_grad_ridge
 double xopt_implicit_spd_grad_ridge(Rcpp::NumericMatrix X, Rcpp::NumericVector y, double lambda);
 RcppExport SEXP _xopt_xopt_implicit_spd_grad_ridge(SEXP XSEXP, SEXP ySEXP, SEXP lambdaSEXP) {
@@ -220,256 +150,49 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// test_multistart_rosenbrock
-int test_multistart_rosenbrock();
-RcppExport SEXP _xopt_test_multistart_rosenbrock() {
+// xopt_internal_run_test
+int xopt_internal_run_test(std::string name);
+RcppExport SEXP _xopt_xopt_internal_run_test(SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_multistart_rosenbrock());
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_internal_run_test(name));
     return rcpp_result_gen;
 END_RCPP
 }
-// test_multistart_rastrigin
-int test_multistart_rastrigin();
-RcppExport SEXP _xopt_test_multistart_rastrigin() {
+// xopt_tr_newton_cpp
+Rcpp::List xopt_tr_newton_cpp(Rcpp::NumericVector par, Rcpp::Function fn, Rcpp::Nullable<Rcpp::Function> gr, Rcpp::Nullable<Rcpp::Function> hvp, Rcpp::List control);
+RcppExport SEXP _xopt_xopt_tr_newton_cpp(SEXP parSEXP, SEXP fnSEXP, SEXP grSEXP, SEXP hvpSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_multistart_rastrigin());
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type par(parSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type fn(fnSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Function> >::type gr(grSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Function> >::type hvp(hvpSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_tr_newton_cpp(par, fn, gr, hvp, control));
     return rcpp_result_gen;
 END_RCPP
 }
-// test_multistart_deterministic
-int test_multistart_deterministic();
-RcppExport SEXP _xopt_test_multistart_deterministic() {
+// xopt_nls_cpp
+Rcpp::List xopt_nls_cpp(Rcpp::NumericVector par, Rcpp::Function residual_fn, Rcpp::Nullable<Rcpp::Function> jacobian_fn, Rcpp::List control);
+RcppExport SEXP _xopt_xopt_nls_cpp(SEXP parSEXP, SEXP residual_fnSEXP, SEXP jacobian_fnSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_multistart_deterministic());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_multistart_scaling
-int test_multistart_scaling();
-RcppExport SEXP _xopt_test_multistart_scaling() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_multistart_scaling());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_nls_exponential_decay
-int test_nls_exponential_decay();
-RcppExport SEXP _xopt_test_nls_exponential_decay() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_nls_exponential_decay());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_nls_misra1a
-int test_nls_misra1a();
-RcppExport SEXP _xopt_test_nls_misra1a() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_nls_misra1a());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_nls_linear
-int test_nls_linear();
-RcppExport SEXP _xopt_test_nls_linear() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_nls_linear());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_nls_jacobian_accuracy
-int test_nls_jacobian_accuracy();
-RcppExport SEXP _xopt_test_nls_jacobian_accuracy() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_nls_jacobian_accuracy());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_nls_covariance
-int test_nls_covariance();
-RcppExport SEXP _xopt_test_nls_covariance() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_nls_covariance());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_nls_osborne1
-int test_nls_osborne1();
-RcppExport SEXP _xopt_test_nls_osborne1() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_nls_osborne1());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_nls_helical_valley
-int test_nls_helical_valley();
-RcppExport SEXP _xopt_test_nls_helical_valley() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_nls_helical_valley());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_nls_performance
-int test_nls_performance();
-RcppExport SEXP _xopt_test_nls_performance() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_nls_performance());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_param_spec_roundtrip
-int test_param_spec_roundtrip();
-RcppExport SEXP _xopt_test_param_spec_roundtrip() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_param_spec_roundtrip());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_positive_transform
-int test_positive_transform();
-RcppExport SEXP _xopt_test_positive_transform() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_positive_transform());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_bounded_transform
-int test_bounded_transform();
-RcppExport SEXP _xopt_test_bounded_transform() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_bounded_transform());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_rosenbrock_structured
-int test_rosenbrock_structured();
-RcppExport SEXP _xopt_test_rosenbrock_structured() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_rosenbrock_structured());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_positive_constrained_mle
-int test_positive_constrained_mle();
-RcppExport SEXP _xopt_test_positive_constrained_mle() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_positive_constrained_mle());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_phase3_hessian_hvp
-int test_phase3_hessian_hvp();
-RcppExport SEXP _xopt_test_phase3_hessian_hvp() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_phase3_hessian_hvp());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_phase3_trust_region_newton
-int test_phase3_trust_region_newton();
-RcppExport SEXP _xopt_test_phase3_trust_region_newton() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_phase3_trust_region_newton());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_phase3_laplace
-int test_phase3_laplace();
-RcppExport SEXP _xopt_test_phase3_laplace() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_phase3_laplace());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_phase4_constraints
-int test_phase4_constraints();
-RcppExport SEXP _xopt_test_phase4_constraints() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_phase4_constraints());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_phase4_multistart_parallel
-int test_phase4_multistart_parallel();
-RcppExport SEXP _xopt_test_phase4_multistart_parallel() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_phase4_multistart_parallel());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_phase4_sparse
-int test_phase4_sparse();
-RcppExport SEXP _xopt_test_phase4_sparse() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_phase4_sparse());
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_phase4_jit_checkpoint
-int test_phase4_jit_checkpoint();
-RcppExport SEXP _xopt_test_phase4_jit_checkpoint() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test_phase4_jit_checkpoint());
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type par(parSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type residual_fn(residual_fnSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Function> >::type jacobian_fn(jacobian_fnSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_nls_cpp(par, residual_fn, jacobian_fn, control));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_xopt_probe_xad_xtensor", (DL_FUNC) &_xopt_probe_xad_xtensor, 0},
-    {"_xopt_test_rosenbrock_benchmark", (DL_FUNC) &_xopt_test_rosenbrock_benchmark, 0},
-    {"_xopt_test_sphere_benchmark", (DL_FUNC) &_xopt_test_sphere_benchmark, 0},
-    {"_xopt_test_powell_singular_benchmark", (DL_FUNC) &_xopt_test_powell_singular_benchmark, 0},
-    {"_xopt_test_beale_benchmark", (DL_FUNC) &_xopt_test_beale_benchmark, 0},
-    {"_xopt_test_brown_badly_scaled_benchmark", (DL_FUNC) &_xopt_test_brown_badly_scaled_benchmark, 0},
-    {"_xopt_test_broyden_tridiagonal_benchmark", (DL_FUNC) &_xopt_test_broyden_tridiagonal_benchmark, 0},
-    {"_xopt_test_quadratic_benchmark", (DL_FUNC) &_xopt_test_quadratic_benchmark, 0},
     {"_xopt_xopt_implicit_spd_grad_ridge", (DL_FUNC) &_xopt_xopt_implicit_spd_grad_ridge, 3},
     {"_xopt_xopt_implicit_spd_grad_generic", (DL_FUNC) &_xopt_xopt_implicit_spd_grad_generic, 4},
     {"_xopt_xopt_chol_impl", (DL_FUNC) &_xopt_xopt_chol_impl, 1},
@@ -481,30 +204,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_xopt_logdet_grad", (DL_FUNC) &_xopt_xopt_logdet_grad, 1},
     {"_xopt_xopt_inv_grad", (DL_FUNC) &_xopt_xopt_inv_grad, 1},
     {"_xopt_xopt_linalg_tape_bytes", (DL_FUNC) &_xopt_xopt_linalg_tape_bytes, 2},
-    {"_xopt_test_multistart_rosenbrock", (DL_FUNC) &_xopt_test_multistart_rosenbrock, 0},
-    {"_xopt_test_multistart_rastrigin", (DL_FUNC) &_xopt_test_multistart_rastrigin, 0},
-    {"_xopt_test_multistart_deterministic", (DL_FUNC) &_xopt_test_multistart_deterministic, 0},
-    {"_xopt_test_multistart_scaling", (DL_FUNC) &_xopt_test_multistart_scaling, 0},
-    {"_xopt_test_nls_exponential_decay", (DL_FUNC) &_xopt_test_nls_exponential_decay, 0},
-    {"_xopt_test_nls_misra1a", (DL_FUNC) &_xopt_test_nls_misra1a, 0},
-    {"_xopt_test_nls_linear", (DL_FUNC) &_xopt_test_nls_linear, 0},
-    {"_xopt_test_nls_jacobian_accuracy", (DL_FUNC) &_xopt_test_nls_jacobian_accuracy, 0},
-    {"_xopt_test_nls_covariance", (DL_FUNC) &_xopt_test_nls_covariance, 0},
-    {"_xopt_test_nls_osborne1", (DL_FUNC) &_xopt_test_nls_osborne1, 0},
-    {"_xopt_test_nls_helical_valley", (DL_FUNC) &_xopt_test_nls_helical_valley, 0},
-    {"_xopt_test_nls_performance", (DL_FUNC) &_xopt_test_nls_performance, 0},
-    {"_xopt_test_param_spec_roundtrip", (DL_FUNC) &_xopt_test_param_spec_roundtrip, 0},
-    {"_xopt_test_positive_transform", (DL_FUNC) &_xopt_test_positive_transform, 0},
-    {"_xopt_test_bounded_transform", (DL_FUNC) &_xopt_test_bounded_transform, 0},
-    {"_xopt_test_rosenbrock_structured", (DL_FUNC) &_xopt_test_rosenbrock_structured, 0},
-    {"_xopt_test_positive_constrained_mle", (DL_FUNC) &_xopt_test_positive_constrained_mle, 0},
-    {"_xopt_test_phase3_hessian_hvp", (DL_FUNC) &_xopt_test_phase3_hessian_hvp, 0},
-    {"_xopt_test_phase3_trust_region_newton", (DL_FUNC) &_xopt_test_phase3_trust_region_newton, 0},
-    {"_xopt_test_phase3_laplace", (DL_FUNC) &_xopt_test_phase3_laplace, 0},
-    {"_xopt_test_phase4_constraints", (DL_FUNC) &_xopt_test_phase4_constraints, 0},
-    {"_xopt_test_phase4_multistart_parallel", (DL_FUNC) &_xopt_test_phase4_multistart_parallel, 0},
-    {"_xopt_test_phase4_sparse", (DL_FUNC) &_xopt_test_phase4_sparse, 0},
-    {"_xopt_test_phase4_jit_checkpoint", (DL_FUNC) &_xopt_test_phase4_jit_checkpoint, 0},
+    {"_xopt_xopt_internal_run_test", (DL_FUNC) &_xopt_xopt_internal_run_test, 1},
+    {"_xopt_xopt_tr_newton_cpp", (DL_FUNC) &_xopt_xopt_tr_newton_cpp, 5},
+    {"_xopt_xopt_nls_cpp", (DL_FUNC) &_xopt_xopt_nls_cpp, 4},
     {NULL, NULL, 0}
 };
 

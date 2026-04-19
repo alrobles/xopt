@@ -127,7 +127,25 @@ xopt_minimize <- function(par,
   mode_label <- gr_spec$mode
 
   if (method == "tr_newton") {
-    res <- .xopt_trust_region_newton(par, fn, gr_use, control)
+    if (!exists("xopt_tr_newton_cpp", mode = "function")) {
+      stop(
+        "method = 'tr_newton' requires xopt_tr_newton_cpp(), but the C++ wrapper is not available.",
+        call. = FALSE
+      )
+    }
+    res <- xopt_tr_newton_cpp(
+      par = par,
+      fn = fn,
+      gr = gr_use,
+      hvp = NULL,
+      control = list(
+        gtol = control$grtol,
+        xtol = control$xtol,
+        ftol = control$ftol,
+        maxiter = control$maxiter,
+        delta_init = control$stepmax
+      )
+    )
     res$gradient_mode <- mode_label
     return(res)
   }
@@ -258,129 +276,6 @@ xopt_minimize <- function(par,
     as.numeric(res)
   }
   list(fn = auto_grad, mode = "auto")
-}
-
-.xopt_trust_region_newton <- function(par, fn, gr, control) {
-  x <- as.numeric(par)
-  f <- fn(x)
-  delta <- control$stepmax
-  maxiter <- control$maxiter
-  g <- gr(x)
-  message <- "Maximum iterations reached"
-  convergence <- 0L
-  iterations <- 0L
-
-  for (iter in seq_len(maxiter)) {
-    iterations <- iter
-    g <- gr(x)
-    if (max(abs(g)) <= control$grtol) {
-      convergence <- 1L
-      message <- "Gradient below tolerance"
-      iterations <- iter - 1L
-      break
-    }
-
-    h <- .xopt_fd_hessian(fn, x)
-    step <- tryCatch(
-      as.numeric(solve(h, -g)),
-      error = function(e) {
-        lambda <- 1e-10
-        repeat {
-          trial <- tryCatch(
-            as.numeric(solve(h + diag(lambda, length(x)), -g)),
-            error = function(err) NULL
-          )
-          if (!is.null(trial) || lambda > 1) {
-            return(if (is.null(trial)) rep(0, length(x)) else trial)
-          }
-          lambda <- lambda * 10
-        }
-      }
-    )
-    step_norm <- sqrt(sum(step^2))
-    if (step_norm > delta && step_norm > 0) {
-      step <- step * (delta / step_norm)
-      step_norm <- delta
-    }
-    if (step_norm <= control$xtol) {
-      convergence <- 2L
-      message <- "Step below tolerance"
-      iterations <- iter - 1L
-      break
-    }
-
-    x_trial <- x + step
-    f_trial <- fn(x_trial)
-    pred <- -sum(g * step) - 0.5 * sum(step * as.numeric(h %*% step))
-    if (pred <= 0) {
-      delta <- max(delta * 0.25, control$xtol)
-      next
-    }
-
-    rho <- (f - f_trial) / pred
-    if (rho < 0.25) {
-      delta <- delta * 0.25
-    } else if (rho > 0.75 && abs(step_norm - delta) <= 1e-12 * max(1, delta)) {
-      delta <- min(2 * delta, 1e6)
-    }
-
-    if (rho > 0.15) {
-      x <- x_trial
-      if (abs(f - f_trial) <= control$ftol * (1 + abs(f))) {
-        convergence <- 4L
-        message <- "Function change below tolerance"
-        iterations <- iter
-        f <- f_trial
-        break
-      }
-      f <- f_trial
-    }
-
-  }
-
-  structure(
-    list(
-      par = x,
-      value = f,
-      gradient = gr(x),
-      convergence = convergence,
-      message = message,
-      iterations = iterations
-    ),
-    class = "xopt_result"
-  )
-}
-
-# Central-difference Hessian fallback used by R trust-region Newton and the
-# Laplace approximation.
-#
-# Diagonal: f_ii ≈ (f(x + h_i e_i) - 2 f(x) + f(x - h_i e_i)) / h_i^2
-#   (3-point stencil; the 4-point formula used for the off-diagonal collapses
-#   to 0 when i == j because the ± combinations of h_i coincide.)
-# Off-diagonal: f_ij ≈ (f(x+) - f(x+-) - f(x-+) + f(x--)) / (4 h_i h_j)
-.xopt_fd_hessian <- function(fn, par, eps = 1e-4) {
-  n <- length(par)
-  H <- matrix(0, n, n)
-  f0 <- fn(par)
-  for (i in seq_len(n)) {
-    hi <- eps * max(1, abs(par[[i]]))
-    xp <- par; xp[[i]] <- par[[i]] + hi
-    xm <- par; xm[[i]] <- par[[i]] - hi
-    H[[i, i]] <- (fn(xp) - 2 * f0 + fn(xm)) / (hi * hi)
-    if (i < n) {
-      for (j in (i + 1L):n) {
-        hj <- eps * max(1, abs(par[[j]]))
-        xpp <- par; xpp[[i]] <- par[[i]] + hi; xpp[[j]] <- par[[j]] + hj
-        xpm <- par; xpm[[i]] <- par[[i]] + hi; xpm[[j]] <- par[[j]] - hj
-        xmp <- par; xmp[[i]] <- par[[i]] - hi; xmp[[j]] <- par[[j]] + hj
-        xmm <- par; xmm[[i]] <- par[[i]] - hi; xmm[[j]] <- par[[j]] - hj
-        hij <- (fn(xpp) - fn(xpm) - fn(xmp) + fn(xmm)) / (4 * hi * hj)
-        H[[i, j]] <- hij
-        H[[j, i]] <- hij
-      }
-    }
-  }
-  H
 }
 
 #' @export

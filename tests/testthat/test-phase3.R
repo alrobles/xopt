@@ -12,11 +12,11 @@ test_that("Phase 3 Laplace approximation matches Gaussian reference", {
 
 test_that("R-side tracer keeps base behavior and auto gradient works", {
   fn <- function(x) sin(x[1]) + exp(x[2])
-  traced <- xopt_ad_trace(fn)
+  traced <- xopt:::xopt_ad_trace(fn)
   x <- c(0.3, -0.1)
   expect_equal(traced(x), fn(x), tolerance = 1e-12)
 
-  g <- xopt_auto_gradient(fn, x, tracer = TRUE)
+  g <- xopt:::xopt_auto_gradient(fn, x, tracer = TRUE)
   g_exact <- c(cos(x[1]), exp(x[2]))
   expect_equal(as.numeric(g), g_exact, tolerance = 1e-4)
 })

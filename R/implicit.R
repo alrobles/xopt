@@ -28,8 +28,7 @@
 #' B <- matrix(rnorm(n * p), n, p)
 #' x_star <- rnorm(n)
 #' x_bar  <- rnorm(n)
-#' xopt_implicit_spd(A, B, x_star, x_bar)
-#' @export
+#' xopt:::xopt_implicit_spd(A, B, x_star, x_bar)
 xopt_implicit_spd <- function(A, B, x_star, x_bar) {
   stopifnot(is.matrix(A), is.matrix(B), is.numeric(x_star), is.numeric(x_bar))
   n <- nrow(A)
