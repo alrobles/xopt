@@ -90,6 +90,97 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// xopt_chol_impl
+Rcpp::NumericMatrix xopt_chol_impl(Rcpp::NumericMatrix A);
+RcppExport SEXP _xopt_xopt_chol_impl(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_chol_impl(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// xopt_solve_impl
+Rcpp::NumericVector xopt_solve_impl(Rcpp::NumericMatrix A, Rcpp::NumericVector b);
+RcppExport SEXP _xopt_xopt_solve_impl(SEXP ASEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_solve_impl(A, b));
+    return rcpp_result_gen;
+END_RCPP
+}
+// xopt_logdet_impl
+double xopt_logdet_impl(Rcpp::NumericMatrix A);
+RcppExport SEXP _xopt_xopt_logdet_impl(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_logdet_impl(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// xopt_inv_impl
+Rcpp::NumericMatrix xopt_inv_impl(Rcpp::NumericMatrix A);
+RcppExport SEXP _xopt_xopt_inv_impl(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_inv_impl(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// xopt_chol_grad
+Rcpp::NumericMatrix xopt_chol_grad(Rcpp::NumericMatrix A);
+RcppExport SEXP _xopt_xopt_chol_grad(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_chol_grad(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// xopt_solve_grad
+SEXP xopt_solve_grad(Rcpp::NumericMatrix A, Rcpp::NumericVector b, std::string wrt);
+RcppExport SEXP _xopt_xopt_solve_grad(SEXP ASEXP, SEXP bSEXP, SEXP wrtSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type b(bSEXP);
+    Rcpp::traits::input_parameter< std::string >::type wrt(wrtSEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_solve_grad(A, b, wrt));
+    return rcpp_result_gen;
+END_RCPP
+}
+// xopt_logdet_grad
+Rcpp::NumericMatrix xopt_logdet_grad(Rcpp::NumericMatrix A);
+RcppExport SEXP _xopt_xopt_logdet_grad(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_logdet_grad(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// xopt_inv_grad
+Rcpp::NumericMatrix xopt_inv_grad(Rcpp::NumericMatrix A);
+RcppExport SEXP _xopt_xopt_inv_grad(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_inv_grad(A));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_multistart_rosenbrock
 int test_multistart_rosenbrock();
 RcppExport SEXP _xopt_test_multistart_rosenbrock() {
@@ -340,6 +431,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_test_brown_badly_scaled_benchmark", (DL_FUNC) &_xopt_test_brown_badly_scaled_benchmark, 0},
     {"_xopt_test_broyden_tridiagonal_benchmark", (DL_FUNC) &_xopt_test_broyden_tridiagonal_benchmark, 0},
     {"_xopt_test_quadratic_benchmark", (DL_FUNC) &_xopt_test_quadratic_benchmark, 0},
+    {"_xopt_xopt_chol_impl", (DL_FUNC) &_xopt_xopt_chol_impl, 1},
+    {"_xopt_xopt_solve_impl", (DL_FUNC) &_xopt_xopt_solve_impl, 2},
+    {"_xopt_xopt_logdet_impl", (DL_FUNC) &_xopt_xopt_logdet_impl, 1},
+    {"_xopt_xopt_inv_impl", (DL_FUNC) &_xopt_xopt_inv_impl, 1},
+    {"_xopt_xopt_chol_grad", (DL_FUNC) &_xopt_xopt_chol_grad, 1},
+    {"_xopt_xopt_solve_grad", (DL_FUNC) &_xopt_xopt_solve_grad, 3},
+    {"_xopt_xopt_logdet_grad", (DL_FUNC) &_xopt_xopt_logdet_grad, 1},
+    {"_xopt_xopt_inv_grad", (DL_FUNC) &_xopt_xopt_inv_grad, 1},
     {"_xopt_test_multistart_rosenbrock", (DL_FUNC) &_xopt_test_multistart_rosenbrock, 0},
     {"_xopt_test_multistart_rastrigin", (DL_FUNC) &_xopt_test_multistart_rastrigin, 0},
     {"_xopt_test_multistart_deterministic", (DL_FUNC) &_xopt_test_multistart_deterministic, 0},

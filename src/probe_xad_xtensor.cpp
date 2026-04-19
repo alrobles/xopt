@@ -1,40 +1,52 @@
-// Probe test: XAD + xtensor integration
-// This file demonstrates that XAD autodiff works with xtensor raster/tensor inputs
+// Probe: verify that XAD is wired into xopt's compiled C++ build via
+// LinkingTo: xadr. This file instantiates xad::AReal<double>, records a
+// simple forward sweep (f(x) = sum(x_i^2)), and reads back the exact
+// adjoint gradient.
+//
+// Replaces the earlier placeholder that hand-coded a gradient on plain
+// doubles. If this probe returns 0 and prints the expected values, the
+// full XAD tape + adjoint machinery is available to the rest of xopt's
+// compiled C++ sources (including inst/include/xopt/linalg/*).
 
 #include <Rcpp.h>
+#include <XAD/XAD.hpp>
+
 #include <vector>
-#include <cmath>
 
-// Placeholder for XAD integration - will be replaced with actual XAD headers
-// For now, just demonstrate basic tensor-like operations
+using AD = xad::AReal<double>;
+using Tape = xad::Tape<double>;
 
-//' @title Probe XAD and xtensor integration
-//' @description Test that automatic differentiation works with tensor inputs
+//' @title Probe XAD integration
+//' @description Instantiates `xad::AReal<double>`, records `f(x) = sum(x^2)`
+//'   with 3 active inputs, and reports the value and adjoint gradient.
+//'   Returns 0 on success (printed gradients match `2 * x` to machine
+//'   precision), nonzero otherwise.
+//' @return Integer status code (0 = pass).
 //' @export
 // [[Rcpp::export]]
 int probe_xad_xtensor() {
-    Rcpp::Rcout << "Probe: XAD + xtensor integration test" << std::endl;
+    Tape tape;
+    std::vector<AD> x{1.0, 2.0, 3.0};
+    for (auto& xi : x) tape.registerInput(xi);
+    tape.newRecording();
 
-    // Simulate a simple tensor operation
-    std::vector<double> x = {1.0, 2.0, 3.0};
-    std::vector<double> grad(3);
+    AD y = 0.0;
+    for (auto& xi : x) y = y + xi * xi;  // f(x) = sum(x_i^2)
 
-    // Simple objective: f(x) = sum(x^2)
-    double f = 0.0;
-    for (size_t i = 0; i < x.size(); ++i) {
-        f += x[i] * x[i];
-        grad[i] = 2.0 * x[i];  // Analytical gradient
+    tape.registerOutput(y);
+    xad::derivative(y) = 1.0;
+    tape.computeAdjoints();
+
+    const double fval = xad::value(y);
+    Rcpp::Rcout << "probe_xad_xtensor: f(x) = " << fval
+                << " (expected 14)\n";
+    int status = (fval == 14.0) ? 0 : 1;
+    for (std::size_t i = 0; i < x.size(); ++i) {
+        const double g = xad::derivative(x[i]);
+        const double expected = 2.0 * xad::value(x[i]);
+        Rcpp::Rcout << "probe_xad_xtensor: df/dx" << i << " = " << g
+                    << " (expected " << expected << ")\n";
+        if (g != expected) status = 2;
     }
-
-    Rcpp::Rcout << "  Objective value: " << f << std::endl;
-    Rcpp::Rcout << "  Gradient: [";
-    for (size_t i = 0; i < grad.size(); ++i) {
-        Rcpp::Rcout << grad[i];
-        if (i < grad.size() - 1) Rcpp::Rcout << ", ";
-    }
-    Rcpp::Rcout << "]" << std::endl;
-
-    Rcpp::Rcout << "  Status: PASS - Basic tensor AD operations working" << std::endl;
-
-    return 0;
+    return status;
 }
