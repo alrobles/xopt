@@ -27,7 +27,14 @@ xopt_ad_trace <- function(fn) {
     for (nm in names(alias)) {
       adj_nm <- alias[[nm]]
       if (exists(adj_nm, envir = asNamespace("xadr"), inherits = FALSE)) {
-        assign(nm, get(adj_nm, envir = asNamespace("xadr"), inherits = FALSE), envir = mask)
+        base_fn <- get(nm, envir = baseenv(), inherits = FALSE)
+        adj_fn  <- get(adj_nm, envir = asNamespace("xadr"), inherits = FALSE)
+        dispatcher <- local({
+          base_fn <- base_fn
+          adj_fn  <- adj_fn
+          function(...) if (is.numeric(..1)) base_fn(...) else adj_fn(...)
+        })
+        assign(nm, dispatcher, envir = mask)
       }
     }
   }, error = function(e) {
