@@ -4,7 +4,7 @@ Title: State-of-the-Art Optimization with Automatic Differentiation
 Version: 0.0.0.9000
 Date: 2026-04-18
 Authors@R: c(
-    person("Angel", "Robles", email = "angel.robles@example.com", role = c("aut", "cre"))
+    person("Angel", "Robles", email = "a.l.robles.fernandez@gmail.com", role = c("aut", "cre"))
     )
 Description: Modern optimization framework combining quasi-Newton BFGS (ucminfcpp),
     automatic differentiation (XAD), and zero-copy tensor operations (xtensor-r).
