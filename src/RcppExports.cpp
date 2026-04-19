@@ -170,6 +170,160 @@ BEGIN_RCPP
 END_RCPP
 }
 
+// test_param_spec_roundtrip
+int test_param_spec_roundtrip();
+RcppExport SEXP _xopt_test_param_spec_roundtrip() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_param_spec_roundtrip());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_positive_transform
+int test_positive_transform();
+RcppExport SEXP _xopt_test_positive_transform() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_positive_transform());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_bounded_transform
+int test_bounded_transform();
+RcppExport SEXP _xopt_test_bounded_transform() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_bounded_transform());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_rosenbrock_structured
+int test_rosenbrock_structured();
+RcppExport SEXP _xopt_test_rosenbrock_structured() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_rosenbrock_structured());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_positive_constrained_mle
+int test_positive_constrained_mle();
+RcppExport SEXP _xopt_test_positive_constrained_mle() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_positive_constrained_mle());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_nls_exponential_decay
+int test_nls_exponential_decay();
+RcppExport SEXP _xopt_test_nls_exponential_decay() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_nls_exponential_decay());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_nls_misra1a
+int test_nls_misra1a();
+RcppExport SEXP _xopt_test_nls_misra1a() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_nls_misra1a());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_nls_linear
+int test_nls_linear();
+RcppExport SEXP _xopt_test_nls_linear() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_nls_linear());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_nls_jacobian_accuracy
+int test_nls_jacobian_accuracy();
+RcppExport SEXP _xopt_test_nls_jacobian_accuracy() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_nls_jacobian_accuracy());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_nls_covariance
+int test_nls_covariance();
+RcppExport SEXP _xopt_test_nls_covariance() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_nls_covariance());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_multistart_rosenbrock
+int test_multistart_rosenbrock();
+RcppExport SEXP _xopt_test_multistart_rosenbrock() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_multistart_rosenbrock());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_multistart_rastrigin
+int test_multistart_rastrigin();
+RcppExport SEXP _xopt_test_multistart_rastrigin() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_multistart_rastrigin());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_multistart_deterministic
+int test_multistart_deterministic();
+RcppExport SEXP _xopt_test_multistart_deterministic() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_multistart_deterministic());
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// test_multistart_scaling
+int test_multistart_scaling();
+RcppExport SEXP _xopt_test_multistart_scaling() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_multistart_scaling());
+    return rcpp_result_gen;
+END_RCPP
+}
+
 static const R_CallMethodDef CallEntries[] = {
     {"_xopt_probe_xad_xtensor", (DL_FUNC) &_xopt_probe_xad_xtensor, 0},
     {"_xopt_probe_sdm", (DL_FUNC) &_xopt_probe_sdm, 0},
@@ -186,6 +340,20 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_test_brown_badly_scaled_benchmark", (DL_FUNC) &_xopt_test_brown_badly_scaled_benchmark, 0},
     {"_xopt_test_broyden_tridiagonal_benchmark", (DL_FUNC) &_xopt_test_broyden_tridiagonal_benchmark, 0},
     {"_xopt_test_quadratic_benchmark", (DL_FUNC) &_xopt_test_quadratic_benchmark, 0},
+    {"_xopt_test_param_spec_roundtrip", (DL_FUNC) &_xopt_test_param_spec_roundtrip, 0},
+    {"_xopt_test_positive_transform", (DL_FUNC) &_xopt_test_positive_transform, 0},
+    {"_xopt_test_bounded_transform", (DL_FUNC) &_xopt_test_bounded_transform, 0},
+    {"_xopt_test_rosenbrock_structured", (DL_FUNC) &_xopt_test_rosenbrock_structured, 0},
+    {"_xopt_test_positive_constrained_mle", (DL_FUNC) &_xopt_test_positive_constrained_mle, 0},
+    {"_xopt_test_nls_exponential_decay", (DL_FUNC) &_xopt_test_nls_exponential_decay, 0},
+    {"_xopt_test_nls_misra1a", (DL_FUNC) &_xopt_test_nls_misra1a, 0},
+    {"_xopt_test_nls_linear", (DL_FUNC) &_xopt_test_nls_linear, 0},
+    {"_xopt_test_nls_jacobian_accuracy", (DL_FUNC) &_xopt_test_nls_jacobian_accuracy, 0},
+    {"_xopt_test_nls_covariance", (DL_FUNC) &_xopt_test_nls_covariance, 0},
+    {"_xopt_test_multistart_rosenbrock", (DL_FUNC) &_xopt_test_multistart_rosenbrock, 0},
+    {"_xopt_test_multistart_rastrigin", (DL_FUNC) &_xopt_test_multistart_rastrigin, 0},
+    {"_xopt_test_multistart_deterministic", (DL_FUNC) &_xopt_test_multistart_deterministic, 0},
+    {"_xopt_test_multistart_scaling", (DL_FUNC) &_xopt_test_multistart_scaling, 0},
     {NULL, NULL, 0}
 };
 

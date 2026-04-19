@@ -60,3 +60,59 @@ test_broyden_tridiagonal_benchmark <- function() {
 test_quadratic_benchmark <- function() {
     .Call('_xopt_test_quadratic_benchmark', PACKAGE = 'xopt')
 }
+
+test_param_spec_roundtrip <- function() {
+    .Call('_xopt_test_param_spec_roundtrip', PACKAGE = 'xopt')
+}
+
+test_positive_transform <- function() {
+    .Call('_xopt_test_positive_transform', PACKAGE = 'xopt')
+}
+
+test_bounded_transform <- function() {
+    .Call('_xopt_test_bounded_transform', PACKAGE = 'xopt')
+}
+
+test_rosenbrock_structured <- function() {
+    .Call('_xopt_test_rosenbrock_structured', PACKAGE = 'xopt')
+}
+
+test_positive_constrained_mle <- function() {
+    .Call('_xopt_test_positive_constrained_mle', PACKAGE = 'xopt')
+}
+
+test_nls_exponential_decay <- function() {
+    .Call('_xopt_test_nls_exponential_decay', PACKAGE = 'xopt')
+}
+
+test_nls_misra1a <- function() {
+    .Call('_xopt_test_nls_misra1a', PACKAGE = 'xopt')
+}
+
+test_nls_linear <- function() {
+    .Call('_xopt_test_nls_linear', PACKAGE = 'xopt')
+}
+
+test_nls_jacobian_accuracy <- function() {
+    .Call('_xopt_test_nls_jacobian_accuracy', PACKAGE = 'xopt')
+}
+
+test_nls_covariance <- function() {
+    .Call('_xopt_test_nls_covariance', PACKAGE = 'xopt')
+}
+
+test_multistart_rosenbrock <- function() {
+    .Call('_xopt_test_multistart_rosenbrock', PACKAGE = 'xopt')
+}
+
+test_multistart_rastrigin <- function() {
+    .Call('_xopt_test_multistart_rastrigin', PACKAGE = 'xopt')
+}
+
+test_multistart_deterministic <- function() {
+    .Call('_xopt_test_multistart_deterministic', PACKAGE = 'xopt')
+}
+
+test_multistart_scaling <- function() {
+    .Call('_xopt_test_multistart_scaling', PACKAGE = 'xopt')
+}
