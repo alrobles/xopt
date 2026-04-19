@@ -1,48 +1,101 @@
 #' Minimize an objective function using xopt
 #'
-#' Minimize a scalar-valued objective function using the UCMINF quasi-Newton algorithm.
+#' Minimize a scalar-valued objective function using the UCMINF quasi-Newton
+#' algorithm or a trust-region Newton solver, with explicit control over how
+#' the gradient is obtained.
 #'
 #' @param par Initial parameter vector (numeric).
-#' @param fn Objective function to minimize. Should take a numeric vector and return a scalar.
-#' @param gr Optional gradient function. Should take a numeric vector and return a gradient vector.
-#'   If NULL, numerical gradients will be computed.
+#' @param fn Objective function to minimize. Should take a numeric vector and
+#'   return a scalar.
+#' @param gr Optional gradient function. Should take a numeric vector and
+#'   return a gradient vector. If supplied, the \code{gradient} argument
+#'   defaults to \code{"user"}.
 #' @param method Optimization method: \code{"bfgs"} (default) or
 #'   \code{"tr_newton"} (trust-region Newton).
-#' @param gradient Gradient mode: \code{"auto"}, \code{"user"}, or \code{"finite"}.
+#' @param gradient Gradient source; one of \code{"auto"}, \code{"user"},
+#'   \code{"traced"}, \code{"fd"}, or \code{"compiled"}. See \strong{Gradient
+#'   modes} below. \code{"finite"} is accepted as a backward-compatible alias
+#'   of \code{"fd"}.
 #' @param control Control parameters (see \code{\link{xopt_control}}).
 #'
-#' @return A list with components:
-#' \item{par}{The optimal parameter vector.}
-#' \item{value}{The objective function value at the optimum.}
-#' \item{gradient}{The gradient at the optimum (if available).}
-#' \item{convergence}{Convergence code (1 = small gradient, 2 = small step, etc.).}
-#' \item{message}{Convergence message.}
-#' \item{iterations}{Number of function evaluations used.}
+#' @return A list of class \code{"xopt_result"} with components:
+#' \describe{
+#'   \item{par}{The optimal parameter vector.}
+#'   \item{value}{The objective function value at the optimum.}
+#'   \item{gradient}{The gradient at the optimum (if available).}
+#'   \item{convergence}{Convergence code (1 = small gradient, 2 = small step,
+#'     etc.).}
+#'   \item{message}{Convergence message.}
+#'   \item{iterations}{Number of function evaluations used.}
+#'   \item{gradient_mode}{Which gradient source actually produced the
+#'     derivatives used during optimization. See below.}
+#' }
+#'
+#' @section Gradient modes:
+#'
+#' \code{xopt_minimize} distinguishes four mechanically different ways to
+#' obtain a gradient, plus \code{"auto"} which picks among them. The
+#' distinction matters because their accuracy, speed, and failure modes are
+#' very different, and silently falling off an AD path onto finite
+#' differences (as earlier versions did) can mask real bugs.
+#'
+#' \describe{
+#'   \item{\code{"user"}}{Use the supplied \code{gr} directly. Fails if
+#'     \code{gr = NULL}. This is the highest-accuracy, highest-speed path
+#'     when you already have a hand-written or codegen'd gradient.}
+#'   \item{\code{"compiled"}}{Reserved for user-supplied gradients produced
+#'     by a C++-level XAD adjoint sweep (e.g., a \code{Problem<Scalar>}
+#'     template instantiated with \code{xad::AReal<double>}). The
+#'     \code{xopt_minimize} R wrapper does not compile R functions to XAD,
+#'     so this mode behaves exactly like \code{"user"} — you must still
+#'     supply \code{gr}. The label exists to make the API truthful about
+#'     where the derivatives came from.}
+#'   \item{\code{"traced"}}{Evaluate \code{fn} inside an R environment where
+#'     a whitelisted subset of base-R math (\code{sin}, \code{cos},
+#'     \code{exp}, \code{log}, \code{sqrt}, inverse trig, \code{gamma},
+#'     \code{lgamma}, \code{digamma}, \code{trigamma}) is masked with the
+#'     corresponding \pkg{xadr} adjoint implementations, and compute the
+#'     gradient via XAD's reverse sweep. This gives machine-precision
+#'     derivatives \emph{only} for objectives whose computation stays
+#'     inside that whitelist; anything calling through \code{.Call},
+#'     \code{optim}, \code{integrate}, or user C code silently falls
+#'     outside the trace. Errors are raised — not silently swallowed —
+#'     when \pkg{xadr} is unavailable.}
+#'   \item{\code{"fd"}}{Central finite differences, step \eqn{h = 10^{-6}
+#'     \max(1, |x|)}. Universal but O(\eqn{p}) evaluations per gradient and
+#'     O(\eqn{\sqrt{\epsilon}}) accuracy. Accepts the legacy alias
+#'     \code{"finite"}.}
+#'   \item{\code{"auto"}}{Try \code{"user"} → \code{"traced"} → \code{"fd"}
+#'     in that order. Unlike previous releases, \code{"auto"} emits a
+#'     one-time warning when \pkg{xadr}'s adjoint path throws and execution
+#'     falls back to finite differences, so users notice when they lose
+#'     AD accuracy instead of getting silent numerical gradients.}
+#' }
 #'
 #' @details
-#' This function provides a high-level interface to optimization using the UCMINF
-#' quasi-Newton BFGS algorithm. If a gradient function is provided, it will be used
-#' for optimization. Otherwise, numerical gradients will be computed using finite
-#' differences.
+#' If \code{gr} is supplied and \code{gradient} is not explicitly set, the
+#' default is \code{"user"}. If \code{gr} is \code{NULL} and \code{gradient}
+#' is not explicitly set, the default is \code{"auto"}.
 #'
 #' @examples
 #' \dontrun{
-#' # Rosenbrock function
-#' rosenbrock <- function(x) {
-#'   (1 - x[1])^2 + 100 * (x[2] - x[1]^2)^2
-#' }
-#'
-#' # With analytical gradient
+#' rosenbrock <- function(x) (1 - x[1])^2 + 100 * (x[2] - x[1]^2)^2
 #' rosenbrock_grad <- function(x) {
 #'   c(-400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
 #'     200 * (x[2] - x[1]^2))
 #' }
 #'
-#' result <- xopt_minimize(c(-1.2, 1), rosenbrock, rosenbrock_grad)
-#' print(result$par)  # Should be close to c(1, 1)
+#' # Hand-written gradient (fastest, exact)
+#' xopt_minimize(c(-1.2, 1), rosenbrock, rosenbrock_grad)
 #'
-#' # Without gradient (numerical gradients)
-#' result2 <- xopt_minimize(c(-1.2, 1), rosenbrock)
+#' # R-side AD tracer (exact for base-R math)
+#' xopt_minimize(c(-1.2, 1), rosenbrock, gradient = "traced")
+#'
+#' # Finite differences (universal fallback)
+#' xopt_minimize(c(-1.2, 1), rosenbrock, gradient = "fd")
+#'
+#' # Auto: tries user → traced → fd, warns on fallback
+#' xopt_minimize(c(-1.2, 1), rosenbrock, gradient = "auto")
 #' }
 #'
 #' @export
@@ -50,46 +103,39 @@ xopt_minimize <- function(par,
                           fn,
                           gr = NULL,
                           method = c("bfgs", "tr_newton"),
-                          gradient = c("auto", "user", "finite"),
+                          gradient = NULL,
                           control = xopt_control()) {
-  # Validate inputs
   if (!is.numeric(par)) {
-    stop("par must be a numeric vector")
+    stop("par must be a numeric vector", call. = FALSE)
   }
   if (!is.function(fn)) {
-    stop("fn must be a function")
+    stop("fn must be a function", call. = FALSE)
   }
   if (!is.null(gr) && !is.function(gr)) {
-    stop("gr must be a function or NULL")
+    stop("gr must be a function or NULL", call. = FALSE)
   }
   method <- match.arg(method)
-  gradient <- match.arg(gradient)
+
+  gradient <- .resolve_gradient_mode(gradient, has_gr = !is.null(gr))
+
   if (!inherits(control, "xopt_control")) {
     control <- do.call(xopt_control, control)
   }
 
-  gr_use <- gr
-  if (is.null(gr_use)) {
-    if (gradient == "user") {
-      stop("gradient='user' requires gr")
-    }
-    if (gradient == "auto") {
-      gr_use <- function(x) xopt_auto_gradient(fn, x, tracer = TRUE)
-    } else {
-      gr_use <- function(x) .xopt_fd_gradient(fn, x)
-    }
-  }
+  gr_spec <- .build_gradient(fn, gr, mode = gradient)
+  gr_use <- gr_spec$fn
+  mode_label <- gr_spec$mode
 
   if (method == "tr_newton") {
-    return(.xopt_trust_region_newton(par, fn, gr_use, control))
+    res <- .xopt_trust_region_newton(par, fn, gr_use, control)
+    res$gradient_mode <- mode_label
+    return(res)
   }
 
-  # BFGS path via ucminfcpp
   if (!requireNamespace("ucminfcpp", quietly = TRUE)) {
-    stop("ucminfcpp package is required but not installed")
+    stop("ucminfcpp package is required but not installed", call. = FALSE)
   }
 
-  # Call ucminf
   result <- ucminfcpp::ucminf(
     par, fn, gr_use,
     control = list(
@@ -100,7 +146,6 @@ xopt_minimize <- function(par,
     )
   )
 
-  # Convert to xopt result format
   structure(
     list(
       par = result$par,
@@ -108,10 +153,111 @@ xopt_minimize <- function(par,
       gradient = if (!is.null(result$gradient)) result$gradient else numeric(0),
       convergence = result$convergence,
       message = result$message,
-      iterations = result$neval
+      iterations = result$neval,
+      gradient_mode = mode_label
     ),
     class = "xopt_result"
   )
+}
+
+# Canonicalize and validate the user-facing gradient mode string. Accepts the
+# legacy "finite" alias and a NULL that picks a sensible default based on
+# whether the user supplied gr.
+.resolve_gradient_mode <- function(gradient, has_gr) {
+  if (is.null(gradient)) {
+    return(if (has_gr) "user" else "auto")
+  }
+  if (!is.character(gradient) || length(gradient) == 0L) {
+    stop("gradient must be a character string", call. = FALSE)
+  }
+  gradient <- gradient[[1L]]
+  if (identical(gradient, "finite")) gradient <- "fd"
+  allowed <- c("auto", "user", "compiled", "traced", "fd")
+  if (!gradient %in% allowed) {
+    stop(sprintf(
+      "Invalid gradient mode '%s'. Must be one of: %s (or legacy 'finite').",
+      gradient, paste(allowed, collapse = ", ")
+    ), call. = FALSE)
+  }
+  gradient
+}
+
+# Resolve a gradient closure and report back the mode label that actually
+# provided the derivatives. Modes "user" / "compiled" require gr; "traced"
+# requires xadr; "fd" has no dependencies; "auto" picks user > traced > fd.
+.build_gradient <- function(fn, gr, mode) {
+  if (mode == "user" || mode == "compiled") {
+    if (is.null(gr)) {
+      stop(sprintf(
+        "gradient = '%s' requires a gradient function (gr).", mode
+      ), call. = FALSE)
+    }
+    return(list(fn = gr, mode = mode))
+  }
+
+  if (mode == "traced") {
+    if (!requireNamespace("xadr", quietly = TRUE)) {
+      stop("gradient = 'traced' requires the xadr package (not installed).",
+           call. = FALSE)
+    }
+    traced_fn <- xopt_ad_trace(fn)
+    traced_grad <- function(x) {
+      res <- xadr::gradient_adjoint(traced_fn, x)
+      if (!is.numeric(res)) {
+        stop("xadr::gradient_adjoint did not return a numeric gradient.",
+             call. = FALSE)
+      }
+      as.numeric(res)
+    }
+    return(list(fn = traced_grad, mode = "traced"))
+  }
+
+  if (mode == "fd") {
+    return(list(fn = function(x) .xopt_fd_gradient(fn, x), mode = "fd"))
+  }
+
+  # mode == "auto": user first (already handled above via has_gr), then
+  # traced with a one-time fallback warning, then fd.
+  if (!is.null(gr)) {
+    return(list(fn = gr, mode = "user"))
+  }
+
+  xadr_ready <- requireNamespace("xadr", quietly = TRUE) &&
+    exists("gradient_adjoint", envir = asNamespace("xadr"), inherits = FALSE)
+
+  if (!xadr_ready) {
+    return(list(
+      fn = function(x) .xopt_fd_gradient(fn, x),
+      mode = "fd"
+    ))
+  }
+
+  traced_fn <- xopt_ad_trace(fn)
+  warned <- FALSE
+  auto_grad <- function(x) {
+    res <- tryCatch(xadr::gradient_adjoint(traced_fn, x),
+                    error = function(e) e)
+    if (inherits(res, "error") || !is.numeric(res)) {
+      if (!warned) {
+        msg <- if (inherits(res, "error")) {
+          conditionMessage(res)
+        } else {
+          "xadr::gradient_adjoint returned a non-numeric result"
+        }
+        warning(sprintf(
+          paste0("gradient = 'auto' falling back to finite differences: ",
+                 "xadr adjoint path failed (%s). Pass gradient = 'fd' to ",
+                 "silence this warning or gradient = 'user' with a ",
+                 "hand-written gr for exact derivatives."),
+          msg
+        ), call. = FALSE)
+        warned <<- TRUE
+      }
+      return(.xopt_fd_gradient(fn, x))
+    }
+    as.numeric(res)
+  }
+  list(fn = auto_grad, mode = "auto")
 }
 
 .xopt_trust_region_newton <- function(par, fn, gr, control) {
@@ -205,26 +351,33 @@ xopt_minimize <- function(par,
   )
 }
 
-# Central-difference Hessian fallback used by R trust-region Newton.
+# Central-difference Hessian fallback used by R trust-region Newton and the
+# Laplace approximation.
+#
+# Diagonal: f_ii ≈ (f(x + h_i e_i) - 2 f(x) + f(x - h_i e_i)) / h_i^2
+#   (3-point stencil; the 4-point formula used for the off-diagonal collapses
+#   to 0 when i == j because the ± combinations of h_i coincide.)
+# Off-diagonal: f_ij ≈ (f(x+) - f(x+-) - f(x-+) + f(x--)) / (4 h_i h_j)
 .xopt_fd_hessian <- function(fn, par, eps = 1e-4) {
   n <- length(par)
   H <- matrix(0, n, n)
-  xpp <- xpm <- xmp <- xmm <- par
+  f0 <- fn(par)
   for (i in seq_len(n)) {
     hi <- eps * max(1, abs(par[[i]]))
-    for (j in i:n) {
-      hj <- eps * max(1, abs(par[[j]]))
-      xpp[[i]] <- par[[i]] + hi; xpp[[j]] <- par[[j]] + hj
-      xpm[[i]] <- par[[i]] + hi; xpm[[j]] <- par[[j]] - hj
-      xmp[[i]] <- par[[i]] - hi; xmp[[j]] <- par[[j]] + hj
-      xmm[[i]] <- par[[i]] - hi; xmm[[j]] <- par[[j]] - hj
-      hij <- (fn(xpp) - fn(xpm) - fn(xmp) + fn(xmm)) / (4 * hi * hj)
-      H[[i, j]] <- hij
-      H[[j, i]] <- hij
-      xpp[[i]] <- par[[i]]; xpp[[j]] <- par[[j]]
-      xpm[[i]] <- par[[i]]; xpm[[j]] <- par[[j]]
-      xmp[[i]] <- par[[i]]; xmp[[j]] <- par[[j]]
-      xmm[[i]] <- par[[i]]; xmm[[j]] <- par[[j]]
+    xp <- par; xp[[i]] <- par[[i]] + hi
+    xm <- par; xm[[i]] <- par[[i]] - hi
+    H[[i, i]] <- (fn(xp) - 2 * f0 + fn(xm)) / (hi * hi)
+    if (i < n) {
+      for (j in (i + 1L):n) {
+        hj <- eps * max(1, abs(par[[j]]))
+        xpp <- par; xpp[[i]] <- par[[i]] + hi; xpp[[j]] <- par[[j]] + hj
+        xpm <- par; xpm[[i]] <- par[[i]] + hi; xpm[[j]] <- par[[j]] - hj
+        xmp <- par; xmp[[i]] <- par[[i]] - hi; xmp[[j]] <- par[[j]] + hj
+        xmm <- par; xmm[[i]] <- par[[i]] - hi; xmm[[j]] <- par[[j]] - hj
+        hij <- (fn(xpp) - fn(xpm) - fn(xmp) + fn(xmm)) / (4 * hi * hj)
+        H[[i, j]] <- hij
+        H[[j, i]] <- hij
+      }
     }
   }
   H
@@ -236,6 +389,9 @@ print.xopt_result <- function(x, ...) {
   cat(sprintf("  Convergence: %d - %s\n", x$convergence, x$message))
   cat(sprintf("  Iterations:  %d\n", x$iterations))
   cat(sprintf("  Final value: %.6e\n", x$value))
+  if (!is.null(x$gradient_mode)) {
+    cat(sprintf("  Grad source: %s\n", x$gradient_mode))
+  }
   cat(sprintf("  Parameters:  [%s]\n",
               paste(sprintf("%.6f", x$par), collapse = ", ")))
   invisible(x)

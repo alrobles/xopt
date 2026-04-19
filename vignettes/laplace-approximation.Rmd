@@ -1,0 +1,139 @@
+---
+title: "Laplace approximation with xopt"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Laplace approximation with xopt}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+```
+
+This vignette shows how to use `xopt_laplace()` to compute the Laplace
+approximation to an intractable integral of the form
+$$Z = \int_{\mathbb{R}^p} \exp\bigl(-f(\theta)\bigr)\,\mathrm{d}\theta,$$
+which is the ubiquitous shape of a (normalized or unnormalized) posterior
+marginal likelihood in Bayesian inference.
+
+The Laplace approximation expands $f$ to second order around its mode
+$\theta^\star = \arg\min f$:
+$$\log Z \;\approx\; -f(\theta^\star) + \tfrac{p}{2}\log(2\pi) - \tfrac{1}{2}\log\det H,$$
+where $H = \nabla^2 f(\theta^\star)$. All three ingredients are handled by
+xopt: `xopt_minimize()` locates the mode, a finite-difference Hessian
+approximates $H$, and the new **differentiable** `xopt_logdet()` from
+`xopt::linalg` computes $\log\det H$ with a reverse-mode-ready XAD tape.
+
+## A Gaussian sanity check
+
+For a target of the form $\exp(-\tfrac{1}{2}(\theta-\mu)^\top \Lambda (\theta-\mu))$
+the Laplace approximation is exact: we should recover
+$\log Z = \tfrac{p}{2}\log(2\pi) + \tfrac{1}{2}\log\det \Lambda^{-1}$.
+
+```{r}
+library(xopt)
+set.seed(1)
+
+p <- 4
+L <- matrix(rnorm(p * p), p, p)
+Prec <- crossprod(L) + diag(p)   # symmetric positive definite
+mu   <- rnorm(p)
+
+nlpost <- function(theta) {
+  d <- theta - mu
+  0.5 * as.numeric(t(d) %*% Prec %*% d)
+}
+
+res <- xopt_laplace(nlpost, par = rep(0, p))
+res
+```
+
+Compare to the closed form:
+
+```{r}
+Sigma <- solve(Prec)
+exact <- 0.5 * p * log(2 * pi) + 0.5 * as.numeric(determinant(Sigma, logarithm = TRUE)$modulus)
+c(laplace = res$log_marginal, exact = exact, diff = res$log_marginal - exact)
+```
+
+The difference is at the level of finite-difference noise in the Hessian,
+not the approximation itself (because the target is Gaussian).
+
+## Bayesian logistic regression
+
+A more realistic toy: `n = 50` i.i.d. binary observations with a 2D
+covariate, standard-normal prior on the coefficients. We compare the
+Laplace approximation of the marginal likelihood $\log p(y)$ across two
+candidate priors with different prior precisions.
+
+```{r}
+set.seed(2)
+n <- 50
+X <- cbind(1, rnorm(n))                                    # intercept + 1 covariate
+beta_true <- c(0.5, -1.2)
+eta <- as.numeric(X %*% beta_true)
+y <- rbinom(n, size = 1, prob = plogis(eta))
+
+nlpost <- function(beta, tau) {
+  eta <- as.numeric(X %*% beta)
+  nll  <- -sum(y * eta - log1p(exp(eta)))                  # Bernoulli NLL
+  nlp  <- 0.5 * tau * sum(beta^2)                          # N(0, 1/tau) prior
+  nll + nlp
+}
+
+log_marginal <- function(tau) {
+  xopt_laplace(function(b) nlpost(b, tau), par = c(0, 0))$log_marginal
+}
+
+taus <- c(0.1, 1, 10)
+sapply(taus, log_marginal)
+```
+
+The prior with the best Laplace-approximated marginal likelihood is the
+one the data prefer (here, `tau = 1`, which matches the N(0, 1) truth).
+
+## What's differentiable, and why it matters
+
+`xopt_logdet()` is backed by the same template-on-scalar implementation
+that underlies every other `xopt::linalg` primitive. When the host code
+records elementary operations onto an `xad::AReal<double>` tape,
+`xopt_logdet()` joins the tape just like `+`, `*`, or `sqrt` would. This
+means that in a future xopt release — once a C++-level compiled objective
+exposes its own `Problem<Scalar>` to the Laplace glue — the derivative of
+`log_marginal` with respect to hyperparameters (e.g., `tau` above) will
+be available from a single reverse sweep, with no finite-difference loop
+around `xopt_laplace()` needed.
+
+From R today, the same idea already works if you supply an analytical
+gradient and/or Hessian through `gr` and `hessian`:
+
+```{r}
+Prec0 <- diag(2)
+hess  <- function(beta, tau) {
+  p <- plogis(as.numeric(X %*% beta))
+  W <- diag(p * (1 - p))
+  t(X) %*% W %*% X + tau * Prec0
+}
+
+res <- xopt_laplace(
+  fn = function(b) nlpost(b, tau = 1),
+  par = c(0, 0),
+  hessian = function(b) hess(b, tau = 1)
+)
+res$log_marginal
+```
+
+## See also
+
+- `xopt_minimize()` for the full gradient-mode API (`"user"`, `"compiled"`,
+  `"traced"`, `"fd"`, `"auto"`).
+- `xopt_chol()`, `xopt_solve()`, `xopt_inv()` — the other three
+  differentiable primitives `xopt_logdet()` is built on.
+- `docs/ROADMAP_v3.md` for the planned implicit-differentiation API that
+  will generalize `xopt_laplace()` to arbitrary fixed-point solves.

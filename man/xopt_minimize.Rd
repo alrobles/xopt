@@ -9,61 +9,116 @@ xopt_minimize(
   fn,
   gr = NULL,
   method = c("bfgs", "tr_newton"),
-  gradient = c("auto", "user", "finite"),
+  gradient = NULL,
   control = xopt_control()
 )
 }
 \arguments{
 \item{par}{Initial parameter vector (numeric).}
 
-\item{fn}{Objective function to minimize. Should take a numeric vector and return a scalar.}
+\item{fn}{Objective function to minimize. Should take a numeric vector and
+return a scalar.}
 
-\item{gr}{Optional gradient function. Should take a numeric vector and return a gradient vector.
-If NULL, numerical gradients will be computed.}
+\item{gr}{Optional gradient function. Should take a numeric vector and
+return a gradient vector. If supplied, the \code{gradient} argument
+defaults to \code{"user"}.}
 
 \item{method}{Optimization method: \code{"bfgs"} (default) or
 \code{"tr_newton"} (trust-region Newton).}
 
-\item{gradient}{Gradient mode: \code{"auto"}, \code{"user"}, or \code{"finite"}.}
+\item{gradient}{Gradient source; one of \code{"auto"}, \code{"user"},
+\code{"traced"}, \code{"fd"}, or \code{"compiled"}. See \strong{Gradient
+modes} below. \code{"finite"} is accepted as a backward-compatible alias
+of \code{"fd"}.}
 
 \item{control}{Control parameters (see \code{\link{xopt_control}}).}
 }
 \value{
-A list with components:
-\item{par}{The optimal parameter vector.}
-\item{value}{The objective function value at the optimum.}
-\item{gradient}{The gradient at the optimum (if available).}
-\item{convergence}{Convergence code (1 = small gradient, 2 = small step, etc.).}
-\item{message}{Convergence message.}
-\item{iterations}{Number of function evaluations used.}
+A list of class \code{"xopt_result"} with components:
+\describe{
+  \item{par}{The optimal parameter vector.}
+  \item{value}{The objective function value at the optimum.}
+  \item{gradient}{The gradient at the optimum (if available).}
+  \item{convergence}{Convergence code (1 = small gradient, 2 = small step,
+    etc.).}
+  \item{message}{Convergence message.}
+  \item{iterations}{Number of function evaluations used.}
+  \item{gradient_mode}{Which gradient source actually produced the
+    derivatives used during optimization. See below.}
+}
 }
 \description{
-Minimize a scalar-valued objective function using the UCMINF quasi-Newton algorithm.
+Minimize a scalar-valued objective function using the UCMINF quasi-Newton
+algorithm or a trust-region Newton solver, with explicit control over how
+the gradient is obtained.
 }
 \details{
-This function provides a high-level interface to optimization using the UCMINF
-quasi-Newton BFGS algorithm. If a gradient function is provided, it will be used
-for optimization. Otherwise, numerical gradients will be computed using finite
-differences.
+If \code{gr} is supplied and \code{gradient} is not explicitly set, the
+default is \code{"user"}. If \code{gr} is \code{NULL} and \code{gradient}
+is not explicitly set, the default is \code{"auto"}.
 }
-\examples{
-\dontrun{
-# Rosenbrock function
-rosenbrock <- function(x) {
-  (1 - x[1])^2 + 100 * (x[2] - x[1]^2)^2
+\section{Gradient modes}{
+
+
+\code{xopt_minimize} distinguishes four mechanically different ways to
+obtain a gradient, plus \code{"auto"} which picks among them. The
+distinction matters because their accuracy, speed, and failure modes are
+very different, and silently falling off an AD path onto finite
+differences (as earlier versions did) can mask real bugs.
+
+\describe{
+  \item{\code{"user"}}{Use the supplied \code{gr} directly. Fails if
+    \code{gr = NULL}. This is the highest-accuracy, highest-speed path
+    when you already have a hand-written or codegen'd gradient.}
+  \item{\code{"compiled"}}{Reserved for user-supplied gradients produced
+    by a C++-level XAD adjoint sweep (e.g., a \code{Problem<Scalar>}
+    template instantiated with \code{xad::AReal<double>}). The
+    \code{xopt_minimize} R wrapper does not compile R functions to XAD,
+    so this mode behaves exactly like \code{"user"} — you must still
+    supply \code{gr}. The label exists to make the API truthful about
+    where the derivatives came from.}
+  \item{\code{"traced"}}{Evaluate \code{fn} inside an R environment where
+    a whitelisted subset of base-R math (\code{sin}, \code{cos},
+    \code{exp}, \code{log}, \code{sqrt}, inverse trig, \code{gamma},
+    \code{lgamma}, \code{digamma}, \code{trigamma}) is masked with the
+    corresponding \pkg{xadr} adjoint implementations, and compute the
+    gradient via XAD's reverse sweep. This gives machine-precision
+    derivatives \emph{only} for objectives whose computation stays
+    inside that whitelist; anything calling through \code{.Call},
+    \code{optim}, \code{integrate}, or user C code silently falls
+    outside the trace. Errors are raised — not silently swallowed —
+    when \pkg{xadr} is unavailable.}
+  \item{\code{"fd"}}{Central finite differences, step \eqn{h = 10^{-6}
+    \max(1, |x|)}. Universal but O(\eqn{p}) evaluations per gradient and
+    O(\eqn{\sqrt{\epsilon}}) accuracy. Accepts the legacy alias
+    \code{"finite"}.}
+  \item{\code{"auto"}}{Try \code{"user"} → \code{"traced"} → \code{"fd"}
+    in that order. Unlike previous releases, \code{"auto"} emits a
+    one-time warning when \pkg{xadr}'s adjoint path throws and execution
+    falls back to finite differences, so users notice when they lose
+    AD accuracy instead of getting silent numerical gradients.}
+}
 }
 
-# With analytical gradient
+\examples{
+\dontrun{
+rosenbrock <- function(x) (1 - x[1])^2 + 100 * (x[2] - x[1]^2)^2
 rosenbrock_grad <- function(x) {
   c(-400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
     200 * (x[2] - x[1]^2))
 }
 
-result <- xopt_minimize(c(-1.2, 1), rosenbrock, rosenbrock_grad)
-print(result$par)  # Should be close to c(1, 1)
+# Hand-written gradient (fastest, exact)
+xopt_minimize(c(-1.2, 1), rosenbrock, rosenbrock_grad)
 
-# Without gradient (numerical gradients)
-result2 <- xopt_minimize(c(-1.2, 1), rosenbrock)
+# R-side AD tracer (exact for base-R math)
+xopt_minimize(c(-1.2, 1), rosenbrock, gradient = "traced")
+
+# Finite differences (universal fallback)
+xopt_minimize(c(-1.2, 1), rosenbrock, gradient = "fd")
+
+# Auto: tries user → traced → fd, warns on fallback
+xopt_minimize(c(-1.2, 1), rosenbrock, gradient = "auto")
 }
 
 }
