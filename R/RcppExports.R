@@ -43,7 +43,6 @@ test_quadratic_benchmark <- function() {
 #' Forward-mode Cholesky on double
 #' @param A numeric SPD matrix (n x n)
 #' @return lower-triangular Cholesky factor L (n x n) with A = L L^T
-#' @export
 xopt_chol_impl <- function(A) {
     .Call(`_xopt_xopt_chol_impl`, A)
 }
@@ -52,7 +51,6 @@ xopt_chol_impl <- function(A) {
 #' @param A numeric SPD matrix (n x n)
 #' @param b numeric vector of length n (single RHS)
 #' @return numeric vector x satisfying A x = b
-#' @export
 xopt_solve_impl <- function(A, b) {
     .Call(`_xopt_xopt_solve_impl`, A, b)
 }
@@ -60,7 +58,6 @@ xopt_solve_impl <- function(A, b) {
 #' Forward-mode log-determinant on double
 #' @param A numeric SPD matrix (n x n)
 #' @return scalar log|A|
-#' @export
 xopt_logdet_impl <- function(A) {
     .Call(`_xopt_xopt_logdet_impl`, A)
 }
@@ -68,7 +65,6 @@ xopt_logdet_impl <- function(A) {
 #' Forward-mode SPD inverse on double
 #' @param A numeric SPD matrix (n x n)
 #' @return numeric matrix A^{-1}
-#' @export
 xopt_inv_impl <- function(A) {
     .Call(`_xopt_xopt_inv_impl`, A)
 }
@@ -76,7 +72,6 @@ xopt_inv_impl <- function(A) {
 #' Adjoint gradient of sum(L) where L = chol(A)
 #' @param A numeric SPD matrix
 #' @return numeric matrix of ∂(sum L) / ∂A
-#' @export
 xopt_chol_grad <- function(A) {
     .Call(`_xopt_xopt_chol_grad`, A)
 }
@@ -86,7 +81,6 @@ xopt_chol_grad <- function(A) {
 #' @param b numeric RHS
 #' @param wrt "A" or "b" — which variable to differentiate w.r.t.
 #' @return numeric matrix (wrt=A) or vector (wrt=b) of partials
-#' @export
 xopt_solve_grad <- function(A, b, wrt) {
     .Call(`_xopt_xopt_solve_grad`, A, b, wrt)
 }
@@ -94,7 +88,6 @@ xopt_solve_grad <- function(A, b, wrt) {
 #' Adjoint gradient of logdet(A)
 #' @param A numeric SPD matrix
 #' @return numeric matrix of ∂ log|A| / ∂A (expected A^{-1})
-#' @export
 xopt_logdet_grad <- function(A) {
     .Call(`_xopt_xopt_logdet_grad`, A)
 }
@@ -102,7 +95,6 @@ xopt_logdet_grad <- function(A) {
 #' Adjoint gradient of sum(A^{-1})
 #' @param A numeric SPD matrix
 #' @return numeric matrix of ∂ sum(A^{-1}) / ∂A
-#' @export
 xopt_inv_grad <- function(A) {
     .Call(`_xopt_xopt_inv_grad`, A)
 }

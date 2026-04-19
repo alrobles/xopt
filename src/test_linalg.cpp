@@ -80,7 +80,6 @@ std::vector<AD> to_ad_vec(const std::vector<double>& v) {
 //' Forward-mode Cholesky on double
 //' @param A numeric SPD matrix (n x n)
 //' @return lower-triangular Cholesky factor L (n x n) with A = L L^T
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix xopt_chol_impl(Rcpp::NumericMatrix A) {
     const int n = A.nrow();
@@ -93,7 +92,6 @@ Rcpp::NumericMatrix xopt_chol_impl(Rcpp::NumericMatrix A) {
 //' @param A numeric SPD matrix (n x n)
 //' @param b numeric vector of length n (single RHS)
 //' @return numeric vector x satisfying A x = b
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector xopt_solve_impl(Rcpp::NumericMatrix A, Rcpp::NumericVector b) {
     const int n = A.nrow();
@@ -106,7 +104,6 @@ Rcpp::NumericVector xopt_solve_impl(Rcpp::NumericMatrix A, Rcpp::NumericVector b
 //' Forward-mode log-determinant on double
 //' @param A numeric SPD matrix (n x n)
 //' @return scalar log|A|
-//' @export
 // [[Rcpp::export]]
 double xopt_logdet_impl(Rcpp::NumericMatrix A) {
     const int n = A.nrow();
@@ -117,7 +114,6 @@ double xopt_logdet_impl(Rcpp::NumericMatrix A) {
 //' Forward-mode SPD inverse on double
 //' @param A numeric SPD matrix (n x n)
 //' @return numeric matrix A^{-1}
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix xopt_inv_impl(Rcpp::NumericMatrix A) {
     const int n = A.nrow();
@@ -137,7 +133,6 @@ Rcpp::NumericMatrix xopt_inv_impl(Rcpp::NumericMatrix A) {
 //' Adjoint gradient of sum(L) where L = chol(A)
 //' @param A numeric SPD matrix
 //' @return numeric matrix of ∂(sum L) / ∂A
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix xopt_chol_grad(Rcpp::NumericMatrix A) {
     const int n = A.nrow();
@@ -161,7 +156,6 @@ Rcpp::NumericMatrix xopt_chol_grad(Rcpp::NumericMatrix A) {
 //' @param b numeric RHS
 //' @param wrt "A" or "b" — which variable to differentiate w.r.t.
 //' @return numeric matrix (wrt=A) or vector (wrt=b) of partials
-//' @export
 // [[Rcpp::export]]
 SEXP xopt_solve_grad(Rcpp::NumericMatrix A, Rcpp::NumericVector b, std::string wrt) {
     const int n = A.nrow();
@@ -202,7 +196,6 @@ SEXP xopt_solve_grad(Rcpp::NumericMatrix A, Rcpp::NumericVector b, std::string w
 //' Adjoint gradient of logdet(A)
 //' @param A numeric SPD matrix
 //' @return numeric matrix of ∂ log|A| / ∂A (expected A^{-1})
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix xopt_logdet_grad(Rcpp::NumericMatrix A) {
     const int n = A.nrow();
@@ -222,7 +215,6 @@ Rcpp::NumericMatrix xopt_logdet_grad(Rcpp::NumericMatrix A) {
 //' Adjoint gradient of sum(A^{-1})
 //' @param A numeric SPD matrix
 //' @return numeric matrix of ∂ sum(A^{-1}) / ∂A
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix xopt_inv_grad(Rcpp::NumericMatrix A) {
     const int n = A.nrow();
