@@ -4,6 +4,7 @@
 // [[Rcpp::depends(ucminfcpp)]]
 
 #include <Rcpp.h>
+#include <xopt/problem.hpp>
 #include <xopt/second_order.hpp>
 #include <xopt/solvers/trust_region_newton.hpp>
 #include <xopt/solvers/ucminf_solver.hpp>
