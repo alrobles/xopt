@@ -14,6 +14,7 @@
 #include <Rcpp.h>
 #include <XAD/XAD.hpp>
 
+#include <xopt/linalg/ad.hpp>
 #include <xopt/linalg/chol.hpp>
 #include <xopt/linalg/inv.hpp>
 #include <xopt/linalg/logdet.hpp>
@@ -231,4 +232,51 @@ Rcpp::NumericMatrix xopt_inv_grad(Rcpp::NumericMatrix A) {
     std::vector<double> grad(static_cast<std::size_t>(n) * static_cast<std::size_t>(n));
     for (std::size_t i = 0; i < grad.size(); ++i) grad[i] = xad::derivative(Aa[i]);
     return vec_to_mat(grad, n, n);
+}
+
+// ---------------------------------------------------------------------------
+// Tape-size benchmark.
+//
+// The CheckpointCallback path records a bounded number of tape slots per
+// call: one output slot for logdet, n for solve, and n^2 for inv. The generic
+// elementary-op path records every arithmetic operation inside chol +
+// triangular solves, scaling as O(n^3). This benchmark returns
+// `tape.getMemory()` (bytes) for each primitive on a random SPD matrix of
+// size n, so the caller can compare growth rates across n.
+// ---------------------------------------------------------------------------
+
+//' Tape memory (bytes) for one adjoint sweep of each xopt::linalg primitive.
+//' @param A numeric SPD matrix
+//' @param op one of "logdet", "solve", "inv"
+//' @return scalar tape memory in bytes (std::size_t → double)
+// [[Rcpp::export]]
+double xopt_linalg_tape_bytes(Rcpp::NumericMatrix A, std::string op) {
+    const int n = A.nrow();
+    Tape tape;
+    auto Av = mat_to_vec(A);
+    auto Aa = to_ad_mat(Av, tape);
+    tape.newRecording();
+    if (op == "logdet") {
+        AD loss = xopt::linalg::logdet_spd(Aa, n);
+        tape.registerOutput(loss);
+        xad::derivative(loss) = 1.0;
+    } else if (op == "solve") {
+        std::vector<double> bv(static_cast<std::size_t>(n), 1.0);
+        auto ba = to_ad_vec(bv);
+        auto xa = xopt::linalg::solve_spd(Aa, n, ba);
+        AD loss = AD(0.0);
+        for (std::size_t i = 0; i < xa.size(); ++i) loss = loss + xa[i];
+        tape.registerOutput(loss);
+        xad::derivative(loss) = 1.0;
+    } else if (op == "inv") {
+        auto Ia = xopt::linalg::inv_spd(Aa, n);
+        AD loss = AD(0.0);
+        for (std::size_t i = 0; i < Ia.size(); ++i) loss = loss + Ia[i];
+        tape.registerOutput(loss);
+        xad::derivative(loss) = 1.0;
+    } else {
+        Rcpp::stop("xopt_linalg_tape_bytes: op must be 'logdet', 'solve', or 'inv'");
+    }
+    tape.computeAdjoints();
+    return static_cast<double>(tape.getMemory());
 }
