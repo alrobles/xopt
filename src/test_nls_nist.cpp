@@ -2,7 +2,6 @@
 //
 // [[Rcpp::plugins(cpp20)]]
 // [[Rcpp::depends(ucminfcpp)]]
-// [[Rcpp::export]]
 
 #include <Rcpp.h>
 #include <xopt/solvers/nls_solver.hpp>
@@ -14,7 +13,6 @@ using namespace xopt::solvers;
 
 // Test: NIST Osborne1 problem
 // Reference: https://www.itl.nist.gov/div898/strd/nls/data/osborne1.shtml
-// [[Rcpp::export]]
 int test_nls_osborne1() {
     try {
         // NIST Osborne1 data
@@ -104,7 +102,6 @@ int test_nls_osborne1() {
 }
 
 // Test: Helical Valley function (3D nonlinear problem)
-// [[Rcpp::export]]
 int test_nls_helical_valley() {
     try {
         int n = 3;
@@ -188,7 +185,6 @@ int test_nls_helical_valley() {
 }
 
 // Test: Performance comparison - count function evaluations
-// [[Rcpp::export]]
 int test_nls_performance() {
     try {
         // Simple exponential model for performance testing

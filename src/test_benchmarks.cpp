@@ -29,7 +29,6 @@ struct BenchmarkProblem : public ProblemBase<double> {
     static constexpr GradKind gradient_kind() { return GradKind::UserFn; }
 };
 
-// [[Rcpp::export]]
 int test_rosenbrock_benchmark() {
     try {
         benchmarks::Rosenbrock rb(2);
@@ -77,7 +76,6 @@ int test_rosenbrock_benchmark() {
     }
 }
 
-// [[Rcpp::export]]
 int test_sphere_benchmark() {
     try {
         benchmarks::Sphere sphere(5);
@@ -110,7 +108,6 @@ int test_sphere_benchmark() {
     }
 }
 
-// [[Rcpp::export]]
 int test_powell_singular_benchmark() {
     try {
         benchmarks::PowellSingular powell(4);
@@ -146,7 +143,6 @@ int test_powell_singular_benchmark() {
     }
 }
 
-// [[Rcpp::export]]
 int test_beale_benchmark() {
     try {
         benchmarks::Beale beale;
@@ -180,7 +176,6 @@ int test_beale_benchmark() {
     }
 }
 
-// [[Rcpp::export]]
 int test_brown_badly_scaled_benchmark() {
     try {
         benchmarks::BrownBadlyScaled brown;
@@ -215,7 +210,6 @@ int test_brown_badly_scaled_benchmark() {
     }
 }
 
-// [[Rcpp::export]]
 int test_broyden_tridiagonal_benchmark() {
     try {
         benchmarks::BroydenTridiagonal broyden(5);
@@ -250,7 +244,6 @@ int test_broyden_tridiagonal_benchmark() {
     }
 }
 
-// [[Rcpp::export]]
 int test_quadratic_benchmark() {
     try {
         auto quad = benchmarks::Quadratic::simple(5);

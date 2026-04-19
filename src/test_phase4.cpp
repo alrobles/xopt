@@ -24,7 +24,6 @@ struct MinResult {
 
 } // namespace
 
-// [[Rcpp::export]]
 int test_phase4_constraints() {
     try {
         auto objective = [](const std::vector<double>& x) {
@@ -61,7 +60,6 @@ int test_phase4_constraints() {
     }
 }
 
-// [[Rcpp::export]]
 int test_phase4_multistart_parallel() {
     try {
         auto solve_one = [](const std::vector<double>& start) {
@@ -116,7 +114,6 @@ int test_phase4_multistart_parallel() {
     }
 }
 
-// [[Rcpp::export]]
 int test_phase4_sparse() {
     try {
         const int n = 40;
@@ -155,7 +152,6 @@ int test_phase4_sparse() {
     }
 }
 
-// [[Rcpp::export]]
 int test_phase4_jit_checkpoint() {
     try {
         auto fn = [](const std::vector<double>& x) {

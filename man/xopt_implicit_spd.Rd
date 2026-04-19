@@ -44,5 +44,5 @@ A <- crossprod(matrix(rnorm(n * n), n, n)) + n * diag(n)
 B <- matrix(rnorm(n * p), n, p)
 x_star <- rnorm(n)
 x_bar  <- rnorm(n)
-xopt_implicit_spd(A, B, x_star, x_bar)
+xopt:::xopt_implicit_spd(A, B, x_star, x_bar)
 }

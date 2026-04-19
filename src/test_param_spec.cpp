@@ -2,7 +2,6 @@
 //
 // [[Rcpp::plugins(cpp20)]]
 // [[Rcpp::depends(ucminfcpp)]]
-// [[Rcpp::export]]
 
 #include <Rcpp.h>
 #include <xopt/param_spec.hpp>
@@ -14,7 +13,6 @@
 using namespace xopt;
 
 // Test round-trip: structured params → flatten → unflatten → structured
-// [[Rcpp::export]]
 int test_param_spec_roundtrip() {
     try {
         ParamSpec spec;
@@ -74,7 +72,6 @@ int test_param_spec_roundtrip() {
 }
 
 // Test positive transform
-// [[Rcpp::export]]
 int test_positive_transform() {
     try {
         auto trans = positive();
@@ -111,7 +108,6 @@ int test_positive_transform() {
 }
 
 // Test bounded transform
-// [[Rcpp::export]]
 int test_bounded_transform() {
     try {
         auto trans = bounded(-2.0, 5.0);
@@ -148,7 +144,6 @@ int test_bounded_transform() {
 }
 
 // Test Rosenbrock with structured params
-// [[Rcpp::export]]
 int test_rosenbrock_structured() {
     try {
         // Define Rosenbrock via ParamSpec
@@ -217,7 +212,6 @@ int test_rosenbrock_structured() {
 }
 
 // Test positive-constrained parameter on exponential MLE
-// [[Rcpp::export]]
 int test_positive_constrained_mle() {
     try {
         // Exponential MLE: maximize L(λ) = n*log(λ) - λ*sum(x_i)

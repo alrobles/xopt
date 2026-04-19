@@ -135,7 +135,7 @@ xopt_multistart <- function(starts, fn, gr = NULL, control = xopt_control(),
 #'
 #' @export
 xopt_nls <- function(par, residual_fn, jacobian_fn = NULL,
-                    control = list()) {
+                     control = list()) {
   # Default control parameters
   default_control <- list(
     ftol = 1e-8,
@@ -144,7 +144,7 @@ xopt_nls <- function(par, residual_fn, jacobian_fn = NULL,
     maxiter = 100,
     trace = FALSE
   )
-  control <- modifyList(default_control, control)
+  control <- utils::modifyList(default_control, control)
 
   # Validate inputs
   if (!is.numeric(par)) {
@@ -155,6 +155,10 @@ xopt_nls <- function(par, residual_fn, jacobian_fn = NULL,
   }
   if (!is.null(jacobian_fn) && !is.function(jacobian_fn)) {
     stop("jacobian_fn must be a function or NULL")
+  }
+
+  if (exists("xopt_nls_cpp", mode = "function")) {
+    return(xopt_nls_cpp(par, residual_fn, jacobian_fn, control))
   }
 
   n <- length(par)
@@ -174,9 +178,10 @@ xopt_nls <- function(par, residual_fn, jacobian_fn = NULL,
   # (In practice, this would call the C++ implementation)
 
   x <- par
-  lambda <- control$lambda_init %||% 1e-3
+  lambda <- if (is.null(control$lambda_init)) 1e-3 else control$lambda_init
   lambda_up <- 10.0
   lambda_down <- 0.1
+  converged <- FALSE
 
   for (iter in seq_len(control$maxiter)) {
     # Compute residuals
@@ -211,6 +216,7 @@ xopt_nls <- function(par, residual_fn, jacobian_fn = NULL,
     if (max(abs(g)) < control$gtol) {
       convergence <- 1
       message <- "Gradient below tolerance"
+      converged <- TRUE
       break
     }
 
@@ -251,6 +257,7 @@ xopt_nls <- function(par, residual_fn, jacobian_fn = NULL,
     if (!step_found) {
       convergence <- 3
       message <- "Cannot find step that reduces objective"
+      converged <- TRUE
       break
     }
 
@@ -258,21 +265,23 @@ xopt_nls <- function(par, residual_fn, jacobian_fn = NULL,
     if (abs(f_new - f) / (abs(f) + 1e-10) < control$ftol) {
       convergence <- 2
       message <- "Function change below tolerance"
+      converged <- TRUE
     }
 
     # Check parameter convergence
     if (max(abs(x_new - x) / (abs(x) + 1e-10)) < control$xtol) {
       convergence <- 4
       message <- "Parameter change below tolerance"
+      converged <- TRUE
     }
 
     x <- x_new
     f <- f_new
 
-    if (exists("convergence")) break
+    if (converged) break
   }
 
-  if (!exists("convergence")) {
+  if (!converged) {
     convergence <- 0
     message <- "Maximum iterations reached"
   }
@@ -317,6 +326,3 @@ xopt_nls <- function(par, residual_fn, jacobian_fn = NULL,
     message = message
   )
 }
-
-# Helper for %||% operator
-`%||%` <- function(a, b) if (is.null(a)) b else a

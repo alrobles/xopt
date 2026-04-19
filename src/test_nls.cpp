@@ -2,7 +2,6 @@
 //
 // [[Rcpp::plugins(cpp20)]]
 // [[Rcpp::depends(ucminfcpp)]]
-// [[Rcpp::export]]
 
 #include <Rcpp.h>
 #include <xopt/solvers/nls_solver.hpp>
@@ -15,7 +14,6 @@ using namespace xopt::solvers;
 // Test 1: Exponential decay fit
 // Model: y = a * exp(-b * t)
 // Data generated with a=5, b=0.5, plus noise
-// [[Rcpp::export]]
 int test_nls_exponential_decay() {
     try {
         // Synthetic data: y = 5 * exp(-0.5 * t) + noise
@@ -83,7 +81,6 @@ int test_nls_exponential_decay() {
 // Test 2: NIST Misra1a problem
 // Model: y = b1 * (1 - exp(-b2 * x))
 // Reference: https://www.itl.nist.gov/div898/strd/nls/data/misra1a.shtml
-// [[Rcpp::export]]
 int test_nls_misra1a() {
     try {
         // NIST Misra1a data (subset for speed)
@@ -153,7 +150,6 @@ int test_nls_misra1a() {
 
 // Test 3: Linear regression (simple case)
 // Model: y = a + b*x
-// [[Rcpp::export]]
 int test_nls_linear() {
     try {
         // Data: y = 2 + 3*x + noise
@@ -206,7 +202,6 @@ int test_nls_linear() {
 }
 
 // Test 4: Jacobian accuracy (compare AD vs finite differences)
-// [[Rcpp::export]]
 int test_nls_jacobian_accuracy() {
     try {
         // Simple nonlinear model: y = a * x^b
@@ -269,7 +264,6 @@ int test_nls_jacobian_accuracy() {
 }
 
 // Test 5: Covariance matrix computation
-// [[Rcpp::export]]
 int test_nls_covariance() {
     try {
         // Linear model with known covariance

@@ -2,7 +2,6 @@
 //
 // [[Rcpp::plugins(cpp20)]]
 // [[Rcpp::depends(ucminfcpp)]]
-// [[Rcpp::export]]
 
 #include <Rcpp.h>
 #include <xopt/benchmarks.hpp>
@@ -71,7 +70,6 @@ MultiStartResult multi_start_optimize(
 }
 
 // Test 1: Rosenbrock with 100 random starts
-// [[Rcpp::export]]
 int test_multistart_rosenbrock() {
     try {
         benchmarks::Rosenbrock rosenbrock(2);
@@ -171,7 +169,6 @@ public:
 };
 
 // Test 2: Rastrigin with multi-start
-// [[Rcpp::export]]
 int test_multistart_rastrigin() {
     try {
         Rastrigin rastrigin(2);
@@ -227,7 +224,6 @@ int test_multistart_rastrigin() {
 }
 
 // Test 3: Deterministic behavior with fixed seed
-// [[Rcpp::export]]
 int test_multistart_deterministic() {
     try {
         benchmarks::Rosenbrock rosenbrock(2);
@@ -286,7 +282,6 @@ int test_multistart_deterministic() {
 }
 
 // Test 4: Performance scaling (not actual parallelism test, just structure)
-// [[Rcpp::export]]
 int test_multistart_scaling() {
     try {
         benchmarks::Rosenbrock rosenbrock(2);
