@@ -181,6 +181,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// xopt_linalg_tape_bytes
+double xopt_linalg_tape_bytes(Rcpp::NumericMatrix A, std::string op);
+RcppExport SEXP _xopt_xopt_linalg_tape_bytes(SEXP ASEXP, SEXP opSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
+    rcpp_result_gen = Rcpp::wrap(xopt_linalg_tape_bytes(A, op));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_multistart_rosenbrock
 int test_multistart_rosenbrock();
 RcppExport SEXP _xopt_test_multistart_rosenbrock() {
@@ -439,6 +451,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_xopt_xopt_solve_grad", (DL_FUNC) &_xopt_xopt_solve_grad, 3},
     {"_xopt_xopt_logdet_grad", (DL_FUNC) &_xopt_xopt_logdet_grad, 1},
     {"_xopt_xopt_inv_grad", (DL_FUNC) &_xopt_xopt_inv_grad, 1},
+    {"_xopt_xopt_linalg_tape_bytes", (DL_FUNC) &_xopt_xopt_linalg_tape_bytes, 2},
     {"_xopt_test_multistart_rosenbrock", (DL_FUNC) &_xopt_test_multistart_rosenbrock, 0},
     {"_xopt_test_multistart_rastrigin", (DL_FUNC) &_xopt_test_multistart_rastrigin, 0},
     {"_xopt_test_multistart_deterministic", (DL_FUNC) &_xopt_test_multistart_deterministic, 0},

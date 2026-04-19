@@ -136,3 +136,35 @@ test_that("adjoint of sum(inv(A)) matches central FD", {
   g_fd <- .central_fd_mat(fn, A)
   expect_equal(g_ad, g_fd, tolerance = 1e-5)
 })
+
+# ---------------------------------------------------------------------------
+# Tape-size growth: custom CheckpointCallback adjoints should record tape
+# memory that scales sub-cubically in n. The generic elementary-op path
+# (which chol(AReal) still takes) records every operation in chol and the
+# triangular solves, so tape bytes scale as O(n^3) plus constants. The
+# callback path for logdet / solve / inv records only the outputs, so tape
+# bytes scale at most quadratically. A log-log slope fit gives a robust,
+# platform-independent check.
+# ---------------------------------------------------------------------------
+
+.logfit_slope <- function(ns, bytes) {
+  fit <- stats::lm(log(bytes) ~ log(ns))
+  as.numeric(stats::coef(fit)[2])
+}
+
+test_that("CheckpointCallback adjoint tape grows sub-cubically in n", {
+  ns <- c(10L, 20L, 40L, 80L)
+  bytes_logdet <- numeric(length(ns))
+  bytes_solve  <- numeric(length(ns))
+  bytes_inv    <- numeric(length(ns))
+  for (k in seq_along(ns)) {
+    A <- .spd(ns[k], seed = 1000L + ns[k])
+    bytes_logdet[k] <- xopt:::xopt_linalg_tape_bytes(A, "logdet")
+    bytes_solve[k]  <- xopt:::xopt_linalg_tape_bytes(A, "solve")
+    bytes_inv[k]    <- xopt:::xopt_linalg_tape_bytes(A, "inv")
+  }
+  # Slopes well below 3.0 confirm we escaped the elementary-op O(n^3) regime.
+  expect_lt(.logfit_slope(ns, bytes_logdet), 2.0)
+  expect_lt(.logfit_slope(ns, bytes_solve),  2.2)
+  expect_lt(.logfit_slope(ns, bytes_inv),    2.5)
+})

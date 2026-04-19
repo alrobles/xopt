@@ -99,6 +99,14 @@ xopt_inv_grad <- function(A) {
     .Call(`_xopt_xopt_inv_grad`, A)
 }
 
+#' Tape memory (bytes) for one adjoint sweep of each xopt::linalg primitive.
+#' @param A numeric SPD matrix
+#' @param op one of "logdet", "solve", "inv"
+#' @return scalar tape memory in bytes (std::size_t → double)
+xopt_linalg_tape_bytes <- function(A, op) {
+    .Call(`_xopt_xopt_linalg_tape_bytes`, A, op)
+}
+
 test_multistart_rosenbrock <- function() {
     .Call(`_xopt_test_multistart_rosenbrock`)
 }
