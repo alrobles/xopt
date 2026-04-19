@@ -5,4 +5,3 @@ CXX_STD = CXX20
 # Tape.cpp into xopt as its own private translation unit (XAD's tape is
 # per-TU), so no OBJECTS override is needed — R's default rule discovers it.
 PKG_CPPFLAGS = -I../inst/include -DXAD_NO_STRONG_INLINE
-PKG_CXXFLAGS = -std=c++20 -Wall -Wextra -Wno-cast-function-type

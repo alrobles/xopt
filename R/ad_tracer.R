@@ -32,7 +32,7 @@ xopt_ad_trace <- function(fn) {
         dispatcher <- local({
           base_fn <- base_fn
           adj_fn  <- adj_fn
-          function(x) if (is.numeric(x)) base_fn(x) else adj_fn(x)
+          function(...) if (is.numeric(..1)) base_fn(...) else adj_fn(...)
         })
         assign(nm, dispatcher, envir = mask)
       }
