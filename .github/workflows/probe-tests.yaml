@@ -21,6 +21,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential
+       - name: Install ucminfcpp Package
+        run: |
+          install.packages('remotes')
+          # Install from GitHub (Modify with actual repository)
+          remotes::install_github('author/ucminfcpp')
+          remotes::install_github('author/xad')
 
       - name: Install R dependencies
         run: |
