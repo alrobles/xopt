@@ -5,7 +5,8 @@
 #'
 #' @param fn Objective function closure.
 #' @return A function with traced environment.
-#' @export
+#' @keywords internal
+#' @noRd
 xopt_ad_trace <- function(fn) {
   if (!is.function(fn)) {
     stop("fn must be a function")
@@ -68,7 +69,8 @@ xopt_ad_trace <- function(fn) {
 #' @param par Parameter vector where gradient is computed.
 #' @param tracer Logical; if TRUE apply function masking prior to AD.
 #' @return Numeric gradient vector.
-#' @export
+#' @keywords internal
+#' @noRd
 xopt_auto_gradient <- function(fn, par, tracer = TRUE) {
   target_fn <- if (tracer) xopt_ad_trace(fn) else fn
   if (requireNamespace("xadr", quietly = TRUE) &&
