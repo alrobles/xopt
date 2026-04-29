@@ -22,7 +22,8 @@ using Tape = xad::Tape<double>;
 //'   Returns 0 on success (printed gradients match `2 * x` to machine
 //'   precision), nonzero otherwise.
 //' @return Integer status code (0 = pass).
-//' @export
+//' @keywords internal
+//' @noRd
 // [[Rcpp::export]]
 int probe_xad_xtensor() {
     Tape tape;

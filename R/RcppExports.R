@@ -7,7 +7,8 @@
 #'   Returns 0 on success (printed gradients match `2 * x` to machine
 #'   precision), nonzero otherwise.
 #' @return Integer status code (0 = pass).
-#' @export
+#' @keywords internal
+#' @noRd
 probe_xad_xtensor <- function() {
     .Call(`_xopt_probe_xad_xtensor`)
 }
